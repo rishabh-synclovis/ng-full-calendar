@@ -16,9 +16,17 @@ export function addDays(date: Date, days: number): Date {
   return d;
 }
 
+/**
+ * Adds whole months to `date`, clamping the day-of-month to the last valid day
+ * of the target month instead of letting it overflow into the following month
+ * (e.g. Jan 31 + 1 month lands on Feb 28/29, not Mar 3).
+ */
 export function addMonths(date: Date, months: number): Date {
+  const targetMonth = date.getMonth() + months;
+  const daysInTargetMonth = new Date(date.getFullYear(), targetMonth + 1, 0).getDate();
   const d = new Date(date);
-  d.setMonth(d.getMonth() + months);
+  d.setDate(Math.min(d.getDate(), daysInTargetMonth));
+  d.setMonth(targetMonth);
   return d;
 }
 
