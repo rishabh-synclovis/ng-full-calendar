@@ -1,0 +1,86 @@
+// Design tokens — the caller (calendar.component.scss) wraps this mixin's output
+// in `.ngfc-root { @include theme.tokens; }`, so this must emit bare declarations,
+// not another `.ngfc-root { ... }` selector (that would compile to a descendant
+// selector `.ngfc-root .ngfc-root` and never match the real root element).
+@mixin tokens {
+  --ngfc-page-bg: #eef4fb;
+  --ngfc-border-color: #e3e8ef;
+  --ngfc-grid-line: #edf1f6;
+  --ngfc-bg: #ffffff;
+  --ngfc-text: #1c2430;
+  --ngfc-text-muted: #8a94a6;
+  --ngfc-today-bg: #dce9fb;
+  --ngfc-today-text: #2f6fed;
+  --ngfc-weekend-bg: #fafbfd;
+  --ngfc-hover-bg: #f3f6fa;
+  --ngfc-now-line: #e8604c;
+  --ngfc-shadow: 0 12px 32px rgba(30, 55, 95, 0.08);
+  --ngfc-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  // pastel tint background + saturated accent, matching a soft/friendly scheduler look
+  --ngfc-color-blue-bg: #dceafe;
+  --ngfc-color-blue-border: #4c8df5;
+  --ngfc-color-blue-text: #1d4f9c;
+
+  --ngfc-color-green-bg: #e1f0e3;
+  --ngfc-color-green-border: #5aa66b;
+  --ngfc-color-green-text: #2c6b3c;
+
+  --ngfc-color-red-bg: #fbe3e0;
+  --ngfc-color-red-border: #e0715f;
+  --ngfc-color-red-text: #9c3b2a;
+
+  --ngfc-color-yellow-bg: #fbeecb;
+  --ngfc-color-yellow-border: #dba93a;
+  --ngfc-color-yellow-text: #8a641a;
+
+  --ngfc-color-purple-bg: #e9e1f7;
+  --ngfc-color-purple-border: #9772d6;
+  --ngfc-color-purple-text: #5b3d99;
+
+  --ngfc-color-orange-bg: #fbe6d4;
+  --ngfc-color-orange-border: #e08a3e;
+  --ngfc-color-orange-text: #94551a;
+
+  --ngfc-color-teal-bg: #dcf0ee;
+  --ngfc-color-teal-border: #4ba69c;
+  --ngfc-color-teal-text: #276560;
+
+  --ngfc-color-gray-bg: #e8eaee;
+  --ngfc-color-gray-border: #8b93a1;
+  --ngfc-color-gray-text: #454c58;
+
+  font-family: var(--ngfc-font);
+  color: var(--ngfc-text);
+  background: var(--ngfc-bg);
+  box-sizing: border-box;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+}
+
+// Event color classes — mixed into `.ngfc-event` wherever a view needs it.
+// Angular's emulated encapsulation scopes styles per component, so any component
+// that renders `.ngfc-color-*` chips must `@include event-colors;` itself.
+@mixin event-colors {
+  @each $name in 'blue', 'green', 'red', 'yellow', 'purple', 'orange', 'teal', 'gray' {
+    &.ngfc-color-#{$name} {
+      background: var(--ngfc-color-#{$name}-bg);
+      border-color: var(--ngfc-color-#{$name}-border);
+      color: var(--ngfc-color-#{$name}-text);
+    }
+  }
+}
+
+// Solid indicator dots (agenda list, month "more" rows) — background is the saturated
+// accent color rather than the pastel tint, so small dots stay legible at 8px.
+@mixin event-dot-colors {
+  @each $name in 'blue', 'green', 'red', 'yellow', 'purple', 'orange', 'teal', 'gray' {
+    &.ngfc-color-#{$name} {
+      background-color: var(--ngfc-color-#{$name}-border);
+    }
+  }
+}

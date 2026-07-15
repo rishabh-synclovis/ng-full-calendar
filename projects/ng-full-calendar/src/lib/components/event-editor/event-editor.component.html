@@ -1,0 +1,88 @@
+<div class="ngfc-modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="ngfc-modal" role="dialog" aria-modal="true">
+    <div class="ngfc-modal-header">
+      <input
+        class="ngfc-title-input"
+        type="text"
+        placeholder="Add title"
+        [(ngModel)]="title"
+        autofocus
+      />
+      <button type="button" class="ngfc-icon-btn" (click)="onClose()" aria-label="Close">&#10005;</button>
+    </div>
+
+    <div class="ngfc-modal-body">
+      <div class="ngfc-field-row ngfc-allday-row">
+        <label class="ngfc-checkbox-label">
+          <input type="checkbox" [(ngModel)]="allDay" />
+          All day
+        </label>
+      </div>
+
+      <div class="ngfc-field-row">
+        <div class="ngfc-field">
+          <label>Start</label>
+          <div class="ngfc-datetime">
+            <input type="date" [(ngModel)]="startDate" />
+            @if (!allDay) {
+              <input type="time" [(ngModel)]="startTime" />
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="ngfc-field-row">
+        <div class="ngfc-field">
+          <label>End</label>
+          <div class="ngfc-datetime">
+            <input type="date" [(ngModel)]="endDate" />
+            @if (!allDay) {
+              <input type="time" [(ngModel)]="endTime" />
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="ngfc-field-row">
+        <div class="ngfc-field">
+          <label>Location</label>
+          <input type="text" placeholder="Add location" [(ngModel)]="location" />
+        </div>
+      </div>
+
+      <div class="ngfc-field-row">
+        <div class="ngfc-field">
+          <label>Description</label>
+          <textarea rows="2" placeholder="Add description" [(ngModel)]="description"></textarea>
+        </div>
+      </div>
+
+      <div class="ngfc-field-row">
+        <div class="ngfc-field">
+          <label>Color</label>
+          <div class="ngfc-color-swatches">
+            @for (c of colorOptions; track c) {
+              <button
+                type="button"
+                class="ngfc-swatch ngfc-event"
+                [class]="'ngfc-color-' + c"
+                [class.ngfc-swatch-selected]="c === color"
+                (click)="selectColor(c)"
+                [attr.aria-label]="c"
+              ></button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ngfc-modal-footer">
+      @if (!isNew) {
+        <button type="button" class="ngfc-btn ngfc-btn-danger" (click)="onDelete()">Delete</button>
+      }
+      <span class="ngfc-footer-spacer"></span>
+      <button type="button" class="ngfc-btn" (click)="onClose()">Cancel</button>
+      <button type="button" class="ngfc-btn ngfc-btn-primary" (click)="onSave()">Save</button>
+    </div>
+  </div>
+</div>

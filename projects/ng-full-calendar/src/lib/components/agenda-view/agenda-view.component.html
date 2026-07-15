@@ -1,0 +1,40 @@
+<div class="ngfc-agenda">
+  @if (groups.length === 0) {
+    <div class="ngfc-agenda-empty">No upcoming events</div>
+  }
+
+  @for (group of groups; track group.date.getTime()) {
+    <div class="ngfc-agenda-row">
+      <div class="ngfc-agenda-date" [class.ngfc-agenda-date-today]="group.isToday">
+        <span class="ngfc-agenda-daynum">{{ group.date | date: 'd' }}</span>
+        <span class="ngfc-agenda-weekday">{{ group.date | date: 'EEEE' }}</span>
+        <span class="ngfc-agenda-month">{{ group.date | date: 'MMM yyyy' }}</span>
+      </div>
+
+      <div class="ngfc-agenda-content">
+        @for (event of group.bannerEvents; track event.id) {
+          <div class="ngfc-agenda-line">
+            <span class="ngfc-agenda-endlabel">Ends {{ formatEndDate(event) }}</span>
+            <span
+              class="ngfc-event ngfc-agenda-tag"
+              [class]="'ngfc-color-' + (event.color || 'blue')"
+              (click)="onEventClick(event)"
+            >
+              {{ event.title }} &#8250;
+            </span>
+          </div>
+        }
+
+        @for (event of group.timedEvents; track event.id) {
+          <div class="ngfc-agenda-line ngfc-agenda-event" (click)="onEventClick(event)">
+            <span class="ngfc-agenda-time">{{ formatTimeRange(event) }}</span>
+            <span class="ngfc-agenda-item">
+              <span class="ngfc-event ngfc-agenda-dot" [class]="'ngfc-color-' + (event.color || 'blue')"></span>
+              <span class="ngfc-agenda-title">{{ event.title }}</span>
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

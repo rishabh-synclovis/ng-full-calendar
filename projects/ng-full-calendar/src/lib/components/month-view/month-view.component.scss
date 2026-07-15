@@ -1,0 +1,237 @@
+@use '../../styles/theme';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.ngfc-month {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ngfc-month-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--ngfc-border-color);
+}
+
+.ngfc-month-weekday {
+  padding: 8px;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ngfc-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ngfc-month-weeks {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 600px;
+}
+
+.ngfc-month-week {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-bottom: 1px solid var(--ngfc-grid-line);
+
+  &:first-child {
+    border-top: 1px solid var(--ngfc-grid-line);
+  }
+}
+
+.ngfc-banner-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px 0;
+  padding-top: 2px;
+}
+
+.ngfc-banner-bar {
+  margin: 0 1px;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 4px;
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    filter: brightness(0.97);
+  }
+}
+
+.ngfc-banner-continues-before {
+  margin-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-style: dashed;
+}
+
+.ngfc-banner-continues-after {
+  margin-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.ngfc-month-grid-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  flex: 1;
+}
+
+.ngfc-month-cell {
+  border-right: 1px solid var(--ngfc-grid-line);
+  padding: 4px 6px;
+  min-height: 90px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--ngfc-hover-bg);
+  }
+
+  &:nth-child(7n + 1) {
+    border-left: 1px solid var(--ngfc-grid-line);
+  }
+}
+
+.ngfc-month-cell-outside {
+  .ngfc-day-number {
+    color: var(--ngfc-text-muted);
+  }
+  background: var(--ngfc-weekend-bg);
+}
+
+.ngfc-month-cell-weekend:not(.ngfc-month-cell-outside) {
+  background: var(--ngfc-weekend-bg);
+}
+
+.ngfc-month-cell-today {
+  background: var(--ngfc-today-bg);
+
+  &:hover {
+    background: var(--ngfc-today-bg);
+    filter: brightness(0.98);
+  }
+}
+
+.ngfc-month-cell-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.ngfc-day-number {
+  font-size: 0.8125rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.ngfc-day-number-today {
+  background: var(--ngfc-today-text);
+  color: #fff;
+  font-weight: 600;
+}
+
+.ngfc-month-cell-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.ngfc-event-pill {
+  @include theme.event-colors;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  display: flex;
+  gap: 4px;
+
+  &:hover {
+    filter: brightness(0.97);
+  }
+
+  .ngfc-event-title {
+    color: inherit;
+  }
+}
+
+.ngfc-event-dotrow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  font-size: 0.75rem;
+
+  &:hover {
+    background: var(--ngfc-hover-bg);
+  }
+}
+
+.ngfc-event-dot {
+  @include theme.event-dot-colors;
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  border: none;
+}
+
+.ngfc-event-time {
+  font-weight: 500;
+  color: var(--ngfc-text-muted);
+  white-space: nowrap;
+}
+
+.ngfc-event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ngfc-text);
+}
+
+.ngfc-more-btn {
+  background: none;
+  border: none;
+  color: var(--ngfc-text-muted);
+  font-size: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  padding: 1px 6px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -1,0 +1,129 @@
+@use '../../styles/theme';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.ngfc-agenda {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.ngfc-agenda-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--ngfc-text-muted);
+}
+
+.ngfc-agenda-row {
+  display: flex;
+  gap: 24px;
+  padding: 18px 4px;
+  border-bottom: 1px solid var(--ngfc-grid-line);
+}
+
+.ngfc-agenda-date {
+  display: flex;
+  flex-direction: column;
+  min-width: 90px;
+  color: var(--ngfc-text);
+}
+
+.ngfc-agenda-date-today {
+  .ngfc-agenda-daynum {
+    color: var(--ngfc-today-text);
+  }
+}
+
+.ngfc-agenda-daynum {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.ngfc-agenda-weekday {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ngfc-text);
+}
+
+.ngfc-agenda-month {
+  font-size: 0.78rem;
+  color: var(--ngfc-text-muted);
+  font-weight: 600;
+}
+
+.ngfc-agenda-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ngfc-agenda-line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ngfc-agenda-endlabel {
+  min-width: 100px;
+  font-size: 0.8rem;
+  color: var(--ngfc-text-muted);
+}
+
+.ngfc-agenda-tag {
+  @include theme.event-colors;
+  border-left: 3px solid transparent;
+  border-radius: 14px;
+  padding: 4px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.97);
+  }
+}
+
+.ngfc-agenda-event {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 2px 4px;
+
+  &:hover {
+    background: var(--ngfc-hover-bg);
+  }
+}
+
+.ngfc-agenda-time {
+  min-width: 100px;
+  font-size: 0.85rem;
+  color: var(--ngfc-text);
+}
+
+.ngfc-agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ngfc-agenda-dot {
+  @include theme.event-dot-colors;
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  border: none;
+}
+
+.ngfc-agenda-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ngfc-text);
+}

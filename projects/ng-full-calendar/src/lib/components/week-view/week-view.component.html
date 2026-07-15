@@ -1,0 +1,98 @@
+<div class="ngfc-week">
+  <div class="ngfc-week-header" [style.grid-template-columns]="'60px repeat(' + days.length + ', 1fr)'">
+    <div class="ngfc-week-gutter"></div>
+    @for (day of days; track day.getTime()) {
+      <div class="ngfc-week-day-header" [class.ngfc-week-day-header-today]="isTodayColumn(day)">
+        <div class="ngfc-week-day-name">{{ day | date: 'EEE' }}</div>
+        <div class="ngfc-week-day-number">{{ day | date: 'd' }}</div>
+      </div>
+    }
+  </div>
+
+  @if (spanningEvents.length > 0) {
+    <div class="ngfc-week-banners" [style.grid-template-columns]="'60px repeat(' + days.length + ', 1fr)'">
+      <div class="ngfc-week-gutter"></div>
+      <div
+        class="ngfc-banner-row"
+        [style.grid-template-columns]="'repeat(' + days.length + ', 1fr)'"
+        [style.grid-template-rows]="'repeat(' + spanningLaneCount + ', 22px)'"
+      >
+        @for (item of spanningEvents; track item.event.id) {
+          <div
+            class="ngfc-event ngfc-banner-bar"
+            [class]="'ngfc-color-' + (item.event.color || 'blue')"
+            [class.ngfc-banner-continues-before]="item.continuesBefore"
+            [class.ngfc-banner-continues-after]="item.continuesAfter"
+            [ngStyle]="spanningEventStyle(item)"
+            (click)="onSpanningEventClick(item, $event)"
+            [title]="item.event.title"
+          >
+            {{ item.event.title }}
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (hasAllDayEvents) {
+    <div class="ngfc-week-allday" [style.grid-template-columns]="'60px repeat(' + days.length + ', 1fr)'">
+      <div class="ngfc-week-gutter ngfc-allday-label">All day</div>
+      @for (dayEvents of allDayEventsByDay; track $index) {
+        <div class="ngfc-allday-cell">
+          @for (event of dayEvents; track event.id) {
+            <div
+              class="ngfc-event ngfc-event-pill"
+              [class]="'ngfc-color-' + (event.color || 'blue')"
+              (click)="onEventClick(event, $event)"
+            >
+              {{ event.title }}
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="ngfc-week-body">
+    <div class="ngfc-week-grid" [style.grid-template-columns]="'60px repeat(' + days.length + ', 1fr)'">
+      <div class="ngfc-hour-gutter">
+        @for (hour of hours; track hour) {
+          <div class="ngfc-hour-label" [style.height.px]="hourHeight">
+            @if (hour > 0) {
+              <span>{{ hour === 12 ? '12 PM' : hour > 12 ? (hour - 12) + ' PM' : hour + ' AM' }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      @for (day of days; track day.getTime(); let dayIndex = $index) {
+        <div class="ngfc-day-column">
+          @for (hour of hours; track hour) {
+            <div class="ngfc-hour-slot" [style.height.px]="hourHeight" (click)="onSlotClick(day, hour)"></div>
+          }
+
+          @if (isTodayColumn(day)) {
+            <div class="ngfc-now-line" [style.top.px]="nowOffsetPx"></div>
+          }
+
+          @for (item of positionedByDay[dayIndex]; track item.event.id) {
+            <div
+              class="ngfc-event ngfc-timed-event"
+              [class]="'ngfc-color-' + (item.event.color || 'blue')"
+              [class.ngfc-timed-event-short]="isShortEvent(item)"
+              [style.top.px]="eventTop(item)"
+              [style.height.px]="eventHeight(item)"
+              [style.width.%]="eventWidthPercent(item)"
+              [style.left.%]="eventLeftPercent(item)"
+              (click)="onEventClick(item.event, $event)"
+              [title]="item.event.title"
+            >
+              <span class="ngfc-event-title">{{ item.event.title }}</span>
+              <span class="ngfc-event-time">{{ item.event.start | date: 'shortTime' }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

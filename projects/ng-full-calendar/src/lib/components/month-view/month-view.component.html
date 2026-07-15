@@ -1,0 +1,78 @@
+<div class="ngfc-month">
+  <div class="ngfc-month-weekdays">
+    @for (label of weekdayLabels; track label) {
+      <div class="ngfc-month-weekday">{{ label }}</div>
+    }
+  </div>
+
+  <div class="ngfc-month-weeks">
+    @for (week of weeks; track $index) {
+      <div class="ngfc-month-week">
+        @if (week.laneCount > 0) {
+          <div
+            class="ngfc-banner-row"
+            [style.grid-template-rows]="'repeat(' + week.laneCount + ', 22px)'"
+          >
+            @for (item of week.spanningEvents; track item.event.id) {
+              <div
+                class="ngfc-event ngfc-banner-bar"
+                [class]="'ngfc-color-' + (item.event.color || 'blue')"
+                [class.ngfc-banner-continues-before]="item.continuesBefore"
+                [class.ngfc-banner-continues-after]="item.continuesAfter"
+                [ngStyle]="spanningEventStyle(item)"
+                (click)="onSpanningEventClick(item, $event)"
+                [title]="item.event.title"
+              >
+                {{ item.event.title }}
+              </div>
+            }
+          </div>
+        }
+
+        <div class="ngfc-month-grid-row">
+          @for (day of week.days; track day.date.getTime()) {
+            <div
+              class="ngfc-month-cell"
+              [class.ngfc-month-cell-outside]="!day.isCurrentMonth"
+              [class.ngfc-month-cell-weekend]="day.isWeekend"
+              [class.ngfc-month-cell-today]="day.isToday"
+              (click)="onDayClick(day)"
+            >
+              <div class="ngfc-month-cell-header">
+                <span class="ngfc-day-number" [class.ngfc-day-number-today]="day.isToday">
+                  {{ day.date.getDate() }}
+                </span>
+              </div>
+
+              <div class="ngfc-month-cell-events">
+                @for (event of visibleEvents(day); track event.id) {
+                  @if (event.allDay) {
+                    <div
+                      class="ngfc-event ngfc-event-pill"
+                      [class]="'ngfc-color-' + (event.color || 'blue')"
+                      (click)="onEventClick(event, $event)"
+                      [title]="event.title"
+                    >
+                      <span class="ngfc-event-title">{{ event.title }}</span>
+                    </div>
+                  } @else {
+                    <div class="ngfc-event-dotrow" (click)="onEventClick(event, $event)" [title]="event.title">
+                      <span class="ngfc-event ngfc-event-dot" [class]="'ngfc-color-' + (event.color || 'blue')"></span>
+                      <span class="ngfc-event-time">{{ event.start | date: 'shortTime' }}</span>
+                      <span class="ngfc-event-title">{{ event.title }}</span>
+                    </div>
+                  }
+                }
+                @if (overflowCount(day) > 0) {
+                  <button type="button" class="ngfc-more-btn" (click)="onMoreClick(day, $event)">
+                    +{{ overflowCount(day) }} more
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

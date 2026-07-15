@@ -1,0 +1,16 @@
+{
+  "name": "ng-full-calendar",
+  "version": "0.0.1",
+  "description": "A Google-Calendar-style event calendar library for Angular — month, week, day, and agenda views.",
+  "keywords": ["angular", "calendar", "scheduler", "event-calendar", "google-calendar", "full-calendar"],
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^18.2.0",
+    "@angular/core": "^18.2.0",
+    "@angular/forms": "^18.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

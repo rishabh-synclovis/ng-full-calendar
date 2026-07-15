@@ -1,0 +1,121 @@
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CalendarEvent, PositionedEvent, SpanningEvent } from '../../models/calendar-event.model';
+import {
+  eventsForDay,
+  layoutDayEvents,
+  layoutSpanningEvents,
+  singleDayAllDayEventsInRange,
+} from '../../utils/event-layout.utils';
+import { buildWeekGrid, isSameDay, isToday, minutesSinceMidnight } from '../../utils/date.utils';
+
+const HOUR_HEIGHT_PX = 48;
+
+@Component({
+  selector: 'ngfc-week-view',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './week-view.component.html',
+  styleUrl: './week-view.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class WeekViewComponent implements OnChanges, OnInit, OnDestroy {
+  @Input({ required: true }) date!: Date;
+  @Input() events: CalendarEvent[] = [];
+  @Input() weekStartsOn: 0 | 1 = 0;
+  /** When true, renders a single day column instead of a full week. */
+  @Input() singleDay = false;
+
+  @Output() eventClick = new EventEmitter<CalendarEvent>();
+  @Output() slotClick = new EventEmitter<Date>();
+
+  readonly hours = Array.from({ length: 24 }, (_, i) => i);
+  readonly hourHeight = HOUR_HEIGHT_PX;
+
+  days: Date[] = [];
+  allDayEventsByDay: CalendarEvent[][] = [];
+  positionedByDay: PositionedEvent[][] = [];
+  spanningEvents: SpanningEvent[] = [];
+  spanningLaneCount = 0;
+  hasAllDayEvents = false;
+  nowOffsetPx = 0;
+  private timer: ReturnType<typeof setInterval> | undefined;
+
+  ngOnInit(): void {
+    this.updateNowLine();
+    this.timer = setInterval(() => this.updateNowLine(), 60_000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
+
+  ngOnChanges(): void {
+    this.days = this.singleDay ? [this.date] : buildWeekGrid(this.date, this.weekStartsOn);
+    const rangeStart = this.days[0];
+    const rangeEnd = this.days[this.days.length - 1];
+
+    const singleDayAllDay = singleDayAllDayEventsInRange(this.events, rangeStart, rangeEnd);
+    this.allDayEventsByDay = this.days.map((day) => singleDayAllDay.filter((e) => isSameDay(e.start, day)));
+    this.hasAllDayEvents = this.allDayEventsByDay.some((dayEvents) => dayEvents.length > 0);
+
+    this.spanningEvents = layoutSpanningEvents(this.events, this.days);
+    this.spanningLaneCount = this.spanningEvents.reduce((max, e) => Math.max(max, e.lane + 1), 0);
+
+    this.positionedByDay = this.days.map((day) => layoutDayEvents(eventsForDay(this.events, day)));
+  }
+
+  spanningEventStyle(item: SpanningEvent): Record<string, string> {
+    return {
+      'grid-column': `${item.startCol + 1} / ${item.endCol + 2}`,
+      'grid-row': `${item.lane + 1}`,
+    };
+  }
+
+  onSpanningEventClick(item: SpanningEvent, domEvent: Event): void {
+    domEvent.stopPropagation();
+    this.eventClick.emit(item.event);
+  }
+
+  private updateNowLine(): void {
+    this.nowOffsetPx = (minutesSinceMidnight(new Date()) / 60) * this.hourHeight;
+  }
+
+  isTodayColumn(day: Date): boolean {
+    return isToday(day);
+  }
+
+  eventTop(item: PositionedEvent): number {
+    return (item.startMinutes / 60) * this.hourHeight;
+  }
+
+  eventHeight(item: PositionedEvent): number {
+    return Math.max(((item.endMinutes - item.startMinutes) / 60) * this.hourHeight, 18);
+  }
+
+  /** Short events don't have room to stack title + time on separate lines. */
+  isShortEvent(item: PositionedEvent): boolean {
+    return this.eventHeight(item) < 34;
+  }
+
+  eventWidthPercent(item: PositionedEvent): number {
+    return 100 / item.columnCount;
+  }
+
+  eventLeftPercent(item: PositionedEvent): number {
+    return (100 / item.columnCount) * item.column;
+  }
+
+  onEventClick(event: CalendarEvent, domEvent: Event): void {
+    domEvent.stopPropagation();
+    this.eventClick.emit(event);
+  }
+
+  onSlotClick(day: Date, hour: number): void {
+    const slot = new Date(day);
+    slot.setHours(hour, 0, 0, 0);
+    this.slotClick.emit(slot);
+  }
+}

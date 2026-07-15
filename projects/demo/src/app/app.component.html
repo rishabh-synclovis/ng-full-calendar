@@ -1,0 +1,20 @@
+<div class="demo-shell">
+  <div class="demo-controls">
+    <label>
+      <input type="checkbox" [(ngModel)]="showSidebar" />
+      Show sidebar
+    </label>
+  </div>
+
+  <main class="demo-main">
+    <ngfc-calendar
+      [events]="events"
+      [categories]="categories"
+      [showSidebar]="showSidebar"
+      view="week"
+      [editable]="true"
+      (navigate)="onNavigate($event)"
+      (eventsChange)="onEventsChange($event)"
+    ></ngfc-calendar>
+  </main>
+</div>

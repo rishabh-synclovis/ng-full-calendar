@@ -1,0 +1,28 @@
+<div class="ngfc-toolbar">
+  <div class="ngfc-toolbar-left">
+    <button type="button" class="ngfc-btn ngfc-btn-today" (click)="todayClick.emit()">Today</button>
+    <button type="button" class="ngfc-icon-btn" (click)="previousClick.emit()" aria-label="Previous">
+      <span>&#8249;</span>
+    </button>
+    <button type="button" class="ngfc-icon-btn" (click)="nextClick.emit()" aria-label="Next">
+      <span>&#8250;</span>
+    </button>
+    <h2 class="ngfc-toolbar-title">{{ title }}</h2>
+    @if (weekBadgeLabel) {
+      <span class="ngfc-week-badge">{{ weekBadgeLabel }}</span>
+    }
+  </div>
+
+  <div class="ngfc-toolbar-right">
+    @for (v of availableViews; track v) {
+      <button
+        type="button"
+        class="ngfc-view-tab"
+        [class.ngfc-view-tab-active]="v === view"
+        (click)="viewChange.emit(v)"
+      >
+        {{ viewLabels[v] }}
+      </button>
+    }
+  </div>
+</div>

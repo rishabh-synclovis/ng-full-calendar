@@ -1,0 +1,31 @@
+<div class="ngfc-sidebar">
+  <ngfc-mini-calendar
+    [selectedDate]="selectedDate"
+    [weekStartsOn]="weekStartsOn"
+    (selectedDateChange)="selectedDateChange.emit($event)"
+  ></ngfc-mini-calendar>
+
+  <input
+    type="text"
+    class="ngfc-filter-input"
+    placeholder="Filter events"
+    [ngModel]="filterText"
+    (ngModelChange)="onFilterInput($event)"
+  />
+
+  @if (categories.length > 0) {
+    <div class="ngfc-category-list">
+      @for (category of categories; track category.id) {
+        <label class="ngfc-category-item">
+          <input
+            type="checkbox"
+            [checked]="activeCategoryIds.has(category.id)"
+            (change)="categoryToggle.emit(category.id)"
+            [class]="'ngfc-category-checkbox ngfc-event ngfc-color-' + category.color"
+          />
+          <span>{{ category.label }}</span>
+        </label>
+      }
+    </div>
+  }
+</div>

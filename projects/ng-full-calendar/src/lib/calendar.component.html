@@ -1,0 +1,81 @@
+<div class="ngfc-root">
+  @if (showSidebar) {
+    <div class="ngfc-sidebar-slot">
+      <ngfc-sidebar
+        [selectedDate]="date"
+        [weekStartsOn]="weekStartsOn"
+        [categories]="resolvedCategories"
+        [activeCategoryIds]="activeCategoryIds"
+        [filterText]="filterText"
+        (selectedDateChange)="onSidebarDateChange($event)"
+        (filterTextChange)="onFilterTextChange($event)"
+        (categoryToggle)="onCategoryToggle($event)"
+      ></ngfc-sidebar>
+    </div>
+  }
+
+  <div class="ngfc-main">
+    <ngfc-toolbar
+      [title]="title"
+      [view]="view"
+      [date]="date"
+      [availableViews]="availableViews"
+      (previousClick)="onPrevious()"
+      (nextClick)="onNext()"
+      (todayClick)="onToday()"
+      (viewChange)="onViewChange($event)"
+    ></ngfc-toolbar>
+
+    <div class="ngfc-view-container">
+      @switch (view) {
+        @case ('month') {
+          <ngfc-month-view
+            [date]="date"
+            [events]="filteredEvents"
+            [weekStartsOn]="weekStartsOn"
+            (dayClick)="onDayClick($event)"
+            (eventClick)="onEventClick($event)"
+            (moreClick)="onMoreClick($event)"
+          ></ngfc-month-view>
+        }
+        @case ('week') {
+          <ngfc-week-view
+            [date]="date"
+            [events]="filteredEvents"
+            [weekStartsOn]="weekStartsOn"
+            [singleDay]="false"
+            (eventClick)="onEventClick($event)"
+            (slotClick)="onSlotClick($event)"
+          ></ngfc-week-view>
+        }
+        @case ('day') {
+          <ngfc-week-view
+            [date]="date"
+            [events]="filteredEvents"
+            [singleDay]="true"
+            (eventClick)="onEventClick($event)"
+            (slotClick)="onSlotClick($event)"
+          ></ngfc-week-view>
+        }
+        @case ('agenda') {
+          <ngfc-agenda-view
+            [date]="date"
+            [events]="filteredEvents"
+            [rangeDays]="agendaRangeDays"
+            (eventClick)="onEventClick($event)"
+          ></ngfc-agenda-view>
+        }
+      }
+    </div>
+  </div>
+
+  @if (editorOpen) {
+    <ngfc-event-editor
+      [event]="editorEvent"
+      [defaultDate]="editorDefaultDate"
+      (save)="onEditorSave($event)"
+      (delete)="onEditorDelete($event)"
+      (close)="closeEditor()"
+    ></ngfc-event-editor>
+  }
+</div>

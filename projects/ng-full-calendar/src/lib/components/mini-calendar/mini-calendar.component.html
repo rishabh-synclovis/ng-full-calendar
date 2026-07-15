@@ -1,0 +1,32 @@
+<div class="ngfc-mini">
+  <div class="ngfc-mini-header">
+    <button type="button" class="ngfc-mini-nav" (click)="previousYear()" aria-label="Previous year">&#171;</button>
+    <button type="button" class="ngfc-mini-nav" (click)="previousMonth()" aria-label="Previous month">&#8249;</button>
+    <span class="ngfc-mini-title">{{ monthLabel }}</span>
+    <button type="button" class="ngfc-mini-nav" (click)="nextMonth()" aria-label="Next month">&#8250;</button>
+    <button type="button" class="ngfc-mini-nav" (click)="nextYear()" aria-label="Next year">&#187;</button>
+  </div>
+
+  <div class="ngfc-mini-weekdays">
+    @for (label of weekdayLabels; track $index) {
+      <span>{{ label }}</span>
+    }
+  </div>
+
+  <div class="ngfc-mini-grid">
+    @for (week of weeks; track $index) {
+      @for (day of week; track day.date.getTime()) {
+        <button
+          type="button"
+          class="ngfc-mini-day"
+          [class.ngfc-mini-day-outside]="!day.isCurrentMonth"
+          [class.ngfc-mini-day-today]="day.isToday"
+          [class.ngfc-mini-day-selected]="day.isSelected"
+          (click)="selectDay(day)"
+        >
+          {{ day.date.getDate() }}
+        </button>
+      }
+    }
+  </div>
+</div>

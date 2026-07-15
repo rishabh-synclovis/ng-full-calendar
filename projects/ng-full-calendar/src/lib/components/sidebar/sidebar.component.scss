@@ -1,0 +1,79 @@
+.ngfc-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--ngfc-bg);
+  border-radius: 16px;
+  box-shadow: var(--ngfc-shadow);
+  padding: 18px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.ngfc-filter-input {
+  border: 1px solid var(--ngfc-border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--ngfc-text);
+  background: var(--ngfc-bg);
+  font-family: inherit;
+
+  &::placeholder {
+    color: var(--ngfc-text-muted);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--ngfc-today-text);
+  }
+}
+
+.ngfc-category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ngfc-category-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ngfc-text);
+}
+
+.ngfc-category-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: var(--ngfc-color-blue-border);
+
+  &.ngfc-color-blue {
+    accent-color: var(--ngfc-color-blue-border);
+  }
+  &.ngfc-color-green {
+    accent-color: var(--ngfc-color-green-border);
+  }
+  &.ngfc-color-red {
+    accent-color: var(--ngfc-color-red-border);
+  }
+  &.ngfc-color-yellow {
+    accent-color: var(--ngfc-color-yellow-border);
+  }
+  &.ngfc-color-purple {
+    accent-color: var(--ngfc-color-purple-border);
+  }
+  &.ngfc-color-orange {
+    accent-color: var(--ngfc-color-orange-border);
+  }
+  &.ngfc-color-teal {
+    accent-color: var(--ngfc-color-teal-border);
+  }
+  &.ngfc-color-gray {
+    accent-color: var(--ngfc-color-gray-border);
+  }
+}
