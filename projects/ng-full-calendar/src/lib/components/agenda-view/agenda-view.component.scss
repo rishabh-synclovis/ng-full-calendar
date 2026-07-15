@@ -41,19 +41,19 @@
 }
 
 .ngfc-agenda-daynum {
-  font-size: 2rem;
+  font-size: 2em;
   font-weight: 700;
   line-height: 1.1;
 }
 
 .ngfc-agenda-weekday {
-  font-size: 0.85rem;
+  font-size: 0.85em;
   font-weight: 600;
   color: var(--ngfc-text);
 }
 
 .ngfc-agenda-month {
-  font-size: 0.78rem;
+  font-size: 0.78em;
   color: var(--ngfc-text-muted);
   font-weight: 600;
 }
@@ -73,7 +73,7 @@
 
 .ngfc-agenda-endlabel {
   min-width: 100px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   color: var(--ngfc-text-muted);
 }
 
@@ -82,7 +82,7 @@
   border-left: 3px solid transparent;
   border-radius: 14px;
   padding: 4px 14px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-weight: 600;
   cursor: pointer;
 
@@ -103,7 +103,7 @@
 
 .ngfc-agenda-time {
   min-width: 100px;
-  font-size: 0.85rem;
+  font-size: 0.85em;
   color: var(--ngfc-text);
 }
 
@@ -123,7 +123,7 @@
 }
 
 .ngfc-agenda-title {
-  font-size: 0.9rem;
+  font-size: 0.9em;
   font-weight: 600;
   color: var(--ngfc-text);
 }

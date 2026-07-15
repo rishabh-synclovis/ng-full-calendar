@@ -4,6 +4,12 @@
       <input type="checkbox" [(ngModel)]="showSidebar" />
       Show sidebar
     </label>
+
+    <label>
+      Font size
+      <input type="range" min="10" max="24" [(ngModel)]="fontSize" />
+      {{ fontSize }}px
+    </label>
   </div>
 
   <main class="demo-main">
@@ -11,6 +17,7 @@
       [events]="events"
       [categories]="categories"
       [showSidebar]="showSidebar"
+      [fontSize]="fontSize"
       view="week"
       [editable]="true"
       (navigate)="onNavigate($event)"

@@ -14,6 +14,7 @@ export class AppComponent {
   title = 'demo';
   events: CalendarEvent[] = buildSampleEvents();
   showSidebar = true;
+  fontSize = 16;
 
   categories: CalendarCategory[] = [
     { id: 'bryntum-team', label: 'Bryntum team', color: 'blue' },

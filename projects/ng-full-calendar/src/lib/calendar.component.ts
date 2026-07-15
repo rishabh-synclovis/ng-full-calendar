@@ -47,6 +47,8 @@ export class CalendarComponent implements OnInit, OnChanges {
   @Input() showSidebar = true;
   /** Labels shown as checkbox filters in the sidebar, one per distinct `calendarId` found in events. */
   @Input() categories: CalendarCategory[] | null = null;
+  /** Base font size for the whole calendar — a number is treated as pixels (e.g. `14`), or pass any CSS length (e.g. `'0.9rem'`). Everything scales proportionally from this. */
+  @Input() fontSize: string | number | null = null;
 
   @Output() viewChange = new EventEmitter<CalendarView>();
   @Output() dateChange = new EventEmitter<Date>();
@@ -73,6 +75,13 @@ export class CalendarComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.title = this.computeTitle();
+  }
+
+  get fontSizeStyle(): string | null {
+    if (this.fontSize === null || this.fontSize === undefined) {
+      return null;
+    }
+    return typeof this.fontSize === 'number' ? `${this.fontSize}px` : this.fontSize;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

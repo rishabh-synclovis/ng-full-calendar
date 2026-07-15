@@ -32,7 +32,7 @@
   flex: 1;
   border: none;
   border-bottom: 2px solid var(--ngfc-border-color);
-  font-size: 1.1rem;
+  font-size: 1.1em;
   padding: 4px 2px 8px;
   color: var(--ngfc-text);
   background: transparent;
@@ -48,7 +48,7 @@
   background: transparent;
   cursor: pointer;
   color: var(--ngfc-text-muted);
-  font-size: 0.9rem;
+  font-size: 0.9em;
   padding: 6px;
   border-radius: 50%;
 
@@ -75,7 +75,7 @@
   flex: 1;
 
   label {
-    font-size: 0.75rem;
+    font-size: 0.75em;
     color: var(--ngfc-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -88,7 +88,7 @@
     border: 1px solid var(--ngfc-border-color);
     border-radius: 4px;
     padding: 6px 8px;
-    font-size: 0.875rem;
+    font-size: 0.875em;
     color: var(--ngfc-text);
     background: var(--ngfc-bg);
     font-family: inherit;
@@ -121,7 +121,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.875rem;
+  font-size: 0.875em;
   cursor: pointer;
 }
 
@@ -168,7 +168,7 @@
   color: var(--ngfc-text);
   border-radius: 4px;
   padding: 6px 14px;
-  font-size: 0.875rem;
+  font-size: 0.875em;
 
   &:hover {
     background: var(--ngfc-hover-bg);
