@@ -13,11 +13,40 @@ Month, week, day, and agenda views with colored event blocks, overlap stacking, 
 
 ## Install
 
+**Option A — once published to npm:**
+
 ```bash
 npm install ng-full-calendar
 ```
 
+**Option B — before an npm release, build locally and install the built package (recommended for now):**
+
+```bash
+# 1. Clone and build this repo
+git clone https://github.com/rishabh-synclovis/ng-full-calendar.git
+cd ng-full-calendar
+npm install
+npm run build:lib          # outputs the publishable package to dist/ng-full-calendar
+
+# 2. From your other Angular project, install that built folder
+cd /path/to/your-app
+npm install /absolute/path/to/ng-full-calendar/dist/ng-full-calendar
+```
+
+`npm install <path>` copies the built package into your project's `node_modules` and adds a regular entry to your `package.json`, exactly like any other npm dependency. Re-run steps 1–2 after pulling library updates to refresh it — or use `npm link` instead of `npm install <path>` if you want changes to pick up automatically while developing both projects side by side:
+
+```bash
+# in ng-full-calendar/dist/ng-full-calendar
+npm link
+# in your-app
+npm link ng-full-calendar
+```
+
+Either way, `@angular/common`, `@angular/core`, and `@angular/forms` (v17+) must already be present in the consuming project — they're peer dependencies, not bundled.
+
 ## Usage
+
+In the Angular project that installed the package, import the standalone component and add it to your own component's `imports` array — there's no `NgModule` to register:
 
 ```ts
 import { Component } from '@angular/core';
