@@ -9,7 +9,8 @@
     "watch": "ng build ng-full-calendar --watch --configuration development",
     "test": "ng test",
     "test:lib": "ng test ng-full-calendar",
-    "test:demo": "ng test demo"
+    "test:demo": "ng test demo",
+    "release:dist-branch": "bash scripts/release-dist-branch.sh"
   },
   "private": true,
   "dependencies": {

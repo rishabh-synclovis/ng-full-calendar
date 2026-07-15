@@ -13,34 +13,30 @@ Month, week, day, and agenda views with colored event blocks, overlap stacking, 
 
 ## Install
 
-**Option A — once published to npm:**
+**Directly from GitHub (works right now, no npm account needed):**
+
+```bash
+npm install github:rishabh-synclovis/ng-full-calendar#dist
+```
+
+The `dist` branch holds only the pre-built package (no demo app, no workspace tooling) and is kept in sync with `main`, so this installs like any normal npm dependency — no local build step required on your end.
+
+**Once published to npm:**
 
 ```bash
 npm install ng-full-calendar
 ```
 
-**Option B — before an npm release, build locally and install the built package (recommended for now):**
+**Building locally instead (for contributing to the library itself):**
 
 ```bash
-# 1. Clone and build this repo
 git clone https://github.com/rishabh-synclovis/ng-full-calendar.git
 cd ng-full-calendar
 npm install
 npm run build:lib          # outputs the publishable package to dist/ng-full-calendar
-
-# 2. From your other Angular project, install that built folder
-cd /path/to/your-app
-npm install /absolute/path/to/ng-full-calendar/dist/ng-full-calendar
 ```
 
-`npm install <path>` copies the built package into your project's `node_modules` and adds a regular entry to your `package.json`, exactly like any other npm dependency. Re-run steps 1–2 after pulling library updates to refresh it — or use `npm link` instead of `npm install <path>` if you want changes to pick up automatically while developing both projects side by side:
-
-```bash
-# in ng-full-calendar/dist/ng-full-calendar
-npm link
-# in your-app
-npm link ng-full-calendar
-```
+Then in your other Angular project: `npm install /absolute/path/to/ng-full-calendar/dist/ng-full-calendar`, or `npm link` for live development.
 
 Either way, `@angular/common`, `@angular/core`, and `@angular/forms` (v17+) must already be present in the consuming project — they're peer dependencies, not bundled.
 

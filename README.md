@@ -7,18 +7,13 @@ Angular workspace containing the **ng-full-calendar** library and a demo app tha
 
 ## Using this library in your own Angular project
 
-Not published to npm yet, so build it locally and install the built package into your app:
+Not published to npm yet — install straight from GitHub instead, no cloning or building required on your end:
 
 ```bash
-# 1. In this repo
-git clone https://github.com/rishabh-synclovis/ng-full-calendar.git
-cd ng-full-calendar
-npm install
-npm run build:lib          # outputs the publishable package to dist/ng-full-calendar
-
-# 2. In your other Angular project
-npm install /absolute/path/to/ng-full-calendar/dist/ng-full-calendar
+npm install github:rishabh-synclovis/ng-full-calendar#dist
 ```
+
+The `dist` branch holds only the pre-built package (kept in sync with `main` via `npm run release:dist-branch`), so this resolves exactly like a normal npm dependency.
 
 Then in your app:
 
@@ -47,13 +42,23 @@ npm run build:lib   # build the library first (demo imports it via dist/)
 npm start           # serve the demo app at http://localhost:4200
 ```
 
-## Publish the library
+## Releasing
+
+**To npm** (once you have an account/access):
 
 ```bash
 npm run build:lib
 cd dist/ng-full-calendar
 npm publish
 ```
+
+**To the `dist` branch** (for `npm install github:...#dist` consumers) — run this after merging changes to `main` that should ship:
+
+```bash
+npm run release:dist-branch
+```
+
+This rebuilds the library and force-pushes the built output as a single commit on `dist`, so it always mirrors the latest `main`.
 
 ## License
 
