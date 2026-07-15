@@ -143,7 +143,7 @@ export class CalendarComponent implements OnInit, OnChanges {
       case 'day':
         return formatDayTitle(this.date);
       case 'agenda':
-        return this.date.getFullYear().toString();
+        return formatMonthTitle(this.date);
     }
   }
 
