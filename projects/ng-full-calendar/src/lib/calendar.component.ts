@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarCategory, CalendarEvent } from './models/calendar-event.model';
 import { CalendarNavigateEvent, CalendarView } from './models/calendar-view.model';
@@ -34,7 +34,7 @@ const DEFAULT_CATEGORY_COLOR = 'blue' as const;
   styleUrl: './calendar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarComponent implements OnChanges {
+export class CalendarComponent implements OnInit, OnChanges {
   @Input() events: CalendarEvent[] = [];
   @Input() view: CalendarView = 'month';
   @Input() date: Date = new Date();
@@ -70,6 +70,10 @@ export class CalendarComponent implements OnChanges {
   editorOpen = false;
   editorEvent: CalendarEvent | null = null;
   editorDefaultDate = new Date();
+
+  ngOnInit(): void {
+    this.title = this.computeTitle();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['date'] || changes['view']) {
