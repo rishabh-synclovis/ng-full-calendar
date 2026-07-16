@@ -42,10 +42,15 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  border-bottom: 1px solid var(--ngfc-grid-line);
+  border-bottom: 2px solid var(--ngfc-border-color);
+  overflow: hidden;
 
   &:first-child {
-    border-top: 1px solid var(--ngfc-grid-line);
+    border-top: 2px solid var(--ngfc-border-color);
+  }
+
+  &:last-child {
+    border-bottom: none;
   }
 }
 
