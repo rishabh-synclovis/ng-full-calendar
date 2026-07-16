@@ -53,7 +53,7 @@
     </div>
   }
 
-  <div class="ngfc-week-body">
+  <div class="ngfc-week-body" #scrollContainer>
     <div class="ngfc-week-grid" [style.grid-template-columns]="'60px repeat(' + days.length + ', 1fr)'">
       <div class="ngfc-hour-gutter">
         @for (hour of hours; track hour) {

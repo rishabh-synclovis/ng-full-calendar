@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarEvent, PositionedEvent, SpanningEvent } from '../../models/calendar-event.model';
 import {
@@ -19,7 +31,7 @@ const HOUR_HEIGHT_PX = 48;
   styleUrl: './week-view.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WeekViewComponent implements OnChanges, OnInit, OnDestroy {
+export class WeekViewComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
   @Input({ required: true }) date!: Date;
   @Input() events: CalendarEvent[] = [];
   @Input() weekStartsOn: 0 | 1 = 0;
@@ -28,6 +40,8 @@ export class WeekViewComponent implements OnChanges, OnInit, OnDestroy {
 
   @Output() eventClick = new EventEmitter<CalendarEvent>();
   @Output() slotClick = new EventEmitter<Date>();
+
+  @ViewChild('scrollContainer') private scrollContainer?: ElementRef<HTMLElement>;
 
   readonly hours = Array.from({ length: 24 }, (_, i) => i);
   readonly hourHeight = HOUR_HEIGHT_PX;
@@ -40,10 +54,16 @@ export class WeekViewComponent implements OnChanges, OnInit, OnDestroy {
   hasAllDayEvents = false;
   nowOffsetPx = 0;
   private timer: ReturnType<typeof setInterval> | undefined;
+  private hasTodayColumn = false;
+  private hasScrolledToNow = false;
 
   ngOnInit(): void {
     this.updateNowLine();
     this.timer = setInterval(() => this.updateNowLine(), 60_000);
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollToNowIfNeeded();
   }
 
   ngOnDestroy(): void {
@@ -65,6 +85,28 @@ export class WeekViewComponent implements OnChanges, OnInit, OnDestroy {
     this.spanningLaneCount = this.spanningEvents.reduce((max, e) => Math.max(max, e.lane + 1), 0);
 
     this.positionedByDay = this.days.map((day) => layoutDayEvents(eventsForDay(this.events, day)));
+
+    const hadTodayColumn = this.hasTodayColumn;
+    this.hasTodayColumn = this.days.some((day) => isToday(day));
+    if (this.hasTodayColumn && !hadTodayColumn) {
+      // Today just entered the visible range (e.g. switching to Day/Week view,
+      // or navigating back to the current week) — scroll to now again.
+      this.hasScrolledToNow = false;
+    }
+    this.scrollToNowIfNeeded();
+  }
+
+  private scrollToNowIfNeeded(): void {
+    if (this.hasScrolledToNow || !this.hasTodayColumn || !this.scrollContainer) {
+      return;
+    }
+    this.hasScrolledToNow = true;
+    const container = this.scrollContainer.nativeElement;
+    const target = Math.max(0, this.nowOffsetPx - container.clientHeight / 2);
+    // Run after the current render so container.clientHeight is accurate.
+    queueMicrotask(() => {
+      container.scrollTop = target;
+    });
   }
 
   spanningEventStyle(item: SpanningEvent): Record<string, string> {
