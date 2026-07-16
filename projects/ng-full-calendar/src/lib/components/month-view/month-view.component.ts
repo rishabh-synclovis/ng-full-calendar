@@ -79,9 +79,21 @@ export class MonthViewComponent implements OnChanges {
     return Math.max(0, day.events.length - this.maxVisible);
   }
 
-  /** Reserves vertical space in the day cell so banner strips overlaid on top don't cover event text below. */
+  /**
+   * Reserves vertical space in the day cell so banner strips overlaid on top
+   * (see .ngfc-banner-row in the stylesheet: top offset 30px, 22px lanes, 2px
+   * gap between lanes) don't cover the day number or event text below.
+   */
   bannerReservedHeight(week: MonthWeek): string {
-    return week.laneCount > 0 ? `${week.laneCount * 22 + 4}px` : '0px';
+    if (week.laneCount === 0) {
+      return '0px';
+    }
+    const BANNER_TOP_OFFSET = 30;
+    const LANE_HEIGHT = 22;
+    const LANE_GAP = 2;
+    const totalHeight =
+      BANNER_TOP_OFFSET + week.laneCount * LANE_HEIGHT + (week.laneCount - 1) * LANE_GAP + LANE_GAP;
+    return `${totalHeight}px`;
   }
 
   spanningEventStyle(item: SpanningEvent): Record<string, string> {
