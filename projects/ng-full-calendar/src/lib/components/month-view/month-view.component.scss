@@ -66,6 +66,7 @@
 }
 
 .ngfc-banner-bar {
+  @include theme.event-colors;
   margin: 0 1px;
   padding: 2px 8px;
   font-size: 0.72em;
