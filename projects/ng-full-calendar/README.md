@@ -1,14 +1,18 @@
 # ng-full-calendar
 
 A Google-Calendar-style event calendar for Angular 17+ (standalone components, signals-friendly).
-Month, week, day, and agenda views with colored event blocks, overlap stacking, and a live "now" indicator.
+Month, week, day, and agenda views with colored event blocks, multi-day banner strips, a built-in
+create/edit/delete modal, and a filterable sidebar.
 
 ## Features
 
-- **Month view** — grid with colored event pills and "+N more" overflow
-- **Week / Day view** — hour-by-hour time grid with side-by-side overlap stacking, all-day row, and a live current-time line
-- **Agenda view** — scrollable list of upcoming events grouped by day
-- Built-in Google-Calendar-like theming via CSS variables, with 8 event colors
+- **Month view** — grid with colored event pills, multi-day banner strips, and "+N more" overflow
+- **Week / Day view** — hour-by-hour time grid with side-by-side overlap stacking, all-day/banner rows, and a live current-time line that auto-scrolls into view
+- **Agenda view** — scrollable list of upcoming events grouped by day, with banner tags for multi-day spans
+- **Sidebar** — mini month calendar, text filter, and category checkboxes (auto-derived from events or supplied explicitly); can be hidden entirely
+- **Built-in event editor** — click a day/slot/event to create, edit, or delete via a modal (title, date/time, location, description, color) — or disable it and handle clicks yourself
+- **Custom hex colors** — pass any of 8 named colors or an arbitrary hex string (`'#DA2C43'`); backgrounds/text shades are derived automatically
+- Built-in Google-Calendar-like theming via CSS variables, with a single `[fontSize]` input to scale the whole UI
 - Fully typed `CalendarEvent` model, standalone Angular components, `OnPush` change detection
 
 ## Install
@@ -151,6 +155,34 @@ Any event whose `start` and `end` fall on different calendar days automatically 
 ```
 
 Same-day events (even with real start/end timestamps, like a 2-hour meeting) render as normal timed blocks or dots, not banners.
+
+### Mapping data from a REST API
+
+Most backends return events in their own shape (ISO date strings, a hex `colorCode` field, etc.) rather than the library's `CalendarEvent` type directly. Map the response once, e.g.:
+
+```ts
+interface ApiEvent {
+  pkEventId: number;
+  eventName: string;
+  description: string | null;
+  colorCode: string;
+  startDate: string;
+  endDate: string;
+}
+
+function mapApiEventsToCalendarEvents(apiEvents: ApiEvent[]): CalendarEvent[] {
+  return apiEvents.map((e) => ({
+    id: String(e.pkEventId),
+    title: e.eventName,
+    start: new Date(e.startDate),
+    end: new Date(e.endDate),
+    color: e.colorCode,               // hex strings work directly
+    description: e.description ?? undefined,
+  }));
+}
+```
+
+No `allDay` field is required — multi-day spans and same-day timed events are both detected automatically from `start`/`end` (see [Multi-day events](#multi-day-events) above).
 
 ### Hiding the sidebar
 

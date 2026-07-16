@@ -1,9 +1,12 @@
 # ng-full-calendar (workspace)
 
-Angular workspace containing the **ng-full-calendar** library and a demo app that showcases it.
+Angular workspace containing the **ng-full-calendar** library — a Google-Calendar-style event
+calendar for Angular 17+ (month/week/day/agenda views, multi-day banner strips, custom hex
+colors, a built-in create/edit/delete modal, and a filterable sidebar) — and a demo app that
+showcases it.
 
-- [`projects/ng-full-calendar`](./projects/ng-full-calendar) — the publishable library. See its [README](./projects/ng-full-calendar/README.md) for full install/usage docs.
-- [`projects/demo`](./projects/demo) — a demo app consuming the library with sample events.
+- [`projects/ng-full-calendar`](./projects/ng-full-calendar) — the publishable library. See its [README](./projects/ng-full-calendar/README.md) for full install/usage docs, the full inputs/outputs API, theming, and the `CalendarEvent` model.
+- [`projects/demo`](./projects/demo) — a demo app consuming the library with sample events, plus a toggle to preview a realistic external-API event shape (hex colors, multi-day spans).
 
 ## Using this library in your own Angular project
 
