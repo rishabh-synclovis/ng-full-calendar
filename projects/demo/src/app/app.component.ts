@@ -17,9 +17,29 @@ export class AppComponent {
   events: CalendarEvent[] = buildSampleEvents();
   showSidebar = true;
   fontSize = 16;
+  customClickMode = false;
+  lastCustomClick = '';
 
   onDataSourceChange(): void {
     this.events = this.useApiData ? buildApiSampleEvents() : buildSampleEvents();
+  }
+
+  onCustomDayClick(date: Date): void {
+    if (this.customClickMode) {
+      this.lastCustomClick = `Day clicked: ${date.toLocaleDateString()}`;
+    }
+  }
+
+  onCustomSlotClick(date: Date): void {
+    if (this.customClickMode) {
+      this.lastCustomClick = `Slot clicked: ${date.toLocaleString()}`;
+    }
+  }
+
+  onCustomEventClick(event: CalendarEvent): void {
+    if (this.customClickMode) {
+      this.lastCustomClick = `Event clicked: "${event.title}"`;
+    }
   }
 
   categories: CalendarCategory[] = [

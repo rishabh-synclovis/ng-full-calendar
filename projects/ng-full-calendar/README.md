@@ -184,6 +184,38 @@ function mapApiEventsToCalendarEvents(apiEvents: ApiEvent[]): CalendarEvent[] {
 
 No `allDay` field is required — multi-day spans and same-day timed events are both detected automatically from `start`/`end` (see [Multi-day events](#multi-day-events) above).
 
+### Custom click behavior (replacing the built-in create/edit modal)
+
+By default, clicking a day cell, an empty time slot, or an event opens the built-in create/edit modal (`editable` defaults to `true`). To run your own logic instead — open your own dialog, navigate to a route, call an API, etc. — set `[editable]="false"` and handle `(dayClick)` / `(slotClick)` / `(eventClick)` yourself. Each still fires with the exact `Date` (or `CalendarEvent`) the user selected; only the built-in modal is skipped:
+
+```html
+<ngfc-calendar
+  [events]="events"
+  [editable]="false"
+  (dayClick)="onDayClick($event)"
+  (slotClick)="onSlotClick($event)"
+  (eventClick)="onEventClick($event)"
+></ngfc-calendar>
+```
+
+```ts
+onDayClick(date: Date) {
+  // e.g. open your own modal/component, pre-filled with `date`
+  this.myDialogService.openCreateEvent({ date });
+}
+
+onSlotClick(date: Date) {
+  // fires from week/day view with both date and time-of-day set
+  this.myDialogService.openCreateEvent({ date });
+}
+
+onEventClick(event: CalendarEvent) {
+  this.myDialogService.openEditEvent({ event });
+}
+```
+
+`dayClick`/`slotClick`/`eventClick` always fire regardless of `editable` — so if you only want to *observe* clicks while keeping the built-in modal (e.g. for analytics), leave `editable` at its default `true` and just add your handlers alongside it.
+
 ### Hiding the sidebar
 
 The left sidebar (mini calendar, filter box, category checkboxes) is on by default. Turn it off with `[showSidebar]="false"` for a calendar-only layout:

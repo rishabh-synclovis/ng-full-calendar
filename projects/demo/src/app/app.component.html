@@ -15,6 +15,15 @@
       <input type="checkbox" [(ngModel)]="useApiData" (ngModelChange)="onDataSourceChange()" />
       Use real API event shape (hex colors, custom multi-day)
     </label>
+
+    <label>
+      <input type="checkbox" [(ngModel)]="customClickMode" />
+      Custom click handling (disables built-in popup)
+    </label>
+
+    @if (customClickMode && lastCustomClick) {
+      <span class="demo-click-log">{{ lastCustomClick }}</span>
+    }
   </div>
 
   <main class="demo-main">
@@ -24,9 +33,12 @@
       [showSidebar]="showSidebar"
       [fontSize]="fontSize"
       view="month"
-      [editable]="true"
+      [editable]="!customClickMode"
       (navigate)="onNavigate($event)"
       (eventsChange)="onEventsChange($event)"
+      (dayClick)="onCustomDayClick($event)"
+      (slotClick)="onCustomSlotClick($event)"
+      (eventClick)="onCustomEventClick($event)"
     ></ngfc-calendar>
   </main>
 </div>
