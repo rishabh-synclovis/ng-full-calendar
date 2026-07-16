@@ -79,6 +79,11 @@ export class MonthViewComponent implements OnChanges {
     return Math.max(0, day.events.length - this.maxVisible);
   }
 
+  /** Reserves vertical space in the day cell so banner strips overlaid on top don't cover event text below. */
+  bannerReservedHeight(week: MonthWeek): string {
+    return week.laneCount > 0 ? `${week.laneCount * 22 + 4}px` : '0px';
+  }
+
   spanningEventStyle(item: SpanningEvent): Record<string, string> {
     return {
       'grid-column': `${item.startCol + 1} / ${item.endCol + 2}`,

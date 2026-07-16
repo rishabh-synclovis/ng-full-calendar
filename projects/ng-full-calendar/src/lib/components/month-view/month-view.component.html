@@ -29,7 +29,10 @@
           </div>
         }
 
-        <div class="ngfc-month-grid-row">
+        <div
+          class="ngfc-month-grid-row"
+          [style.padding-top]="bannerReservedHeight(week)"
+        >
           @for (day of week.days; track day.date.getTime()) {
             <div
               class="ngfc-month-cell"
