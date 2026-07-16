@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CalendarEvent, CalendarEventColor } from '../../models/calendar-event.model';
+import { CalendarEvent, CalendarEventColor, CalendarNamedColor } from '../../models/calendar-event.model';
+import { isNamedColor } from '../../utils/color.utils';
 
 export interface EventEditorResult {
   event: CalendarEvent;
   isNew: boolean;
 }
 
-const COLOR_OPTIONS: CalendarEventColor[] = [
+const COLOR_OPTIONS: CalendarNamedColor[] = [
   'blue',
   'green',
   'red',
@@ -70,6 +71,7 @@ export class EventEditorComponent implements OnChanges {
   endTime = '';
   allDay = false;
   color: CalendarEventColor = 'blue';
+  customColor = '#4c8df5';
   location = '';
   description = '';
 
@@ -82,6 +84,9 @@ export class EventEditorComponent implements OnChanges {
       this.title = this.event.title;
       this.allDay = !!this.event.allDay;
       this.color = this.event.color ?? 'blue';
+      if (this.color && !isNamedColor(this.color)) {
+        this.customColor = this.color;
+      }
       this.location = this.event.location ?? '';
       this.description = this.event.description ?? '';
       this.startDate = toDateInputValue(this.event.start);
@@ -108,6 +113,19 @@ export class EventEditorComponent implements OnChanges {
 
   selectColor(color: CalendarEventColor): void {
     this.color = color;
+  }
+
+  get isCustomColorSelected(): boolean {
+    return !isNamedColor(this.color);
+  }
+
+  onCustomColorChange(hex: string): void {
+    this.customColor = hex;
+    this.color = hex;
+  }
+
+  selectCustomColor(): void {
+    this.color = this.customColor;
   }
 
   onSave(): void {

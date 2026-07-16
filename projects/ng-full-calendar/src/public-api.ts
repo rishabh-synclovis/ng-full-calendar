@@ -16,3 +16,4 @@ export * from './lib/models/calendar-view.model';
 
 export * from './lib/utils/date.utils';
 export * from './lib/utils/event-layout.utils';
+export * from './lib/utils/color.utils';

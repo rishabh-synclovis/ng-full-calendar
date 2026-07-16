@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarCategory, CalendarComponent, CalendarEvent, CalendarNavigateEvent } from 'ng-full-calendar';
 import { buildSampleEvents } from './sample-events';
+import { buildApiSampleEvents } from './api-events';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +13,14 @@ import { buildSampleEvents } from './sample-events';
 })
 export class AppComponent {
   title = 'demo';
+  useApiData = false;
   events: CalendarEvent[] = buildSampleEvents();
   showSidebar = true;
   fontSize = 16;
+
+  onDataSourceChange(): void {
+    this.events = this.useApiData ? buildApiSampleEvents() : buildSampleEvents();
+  }
 
   categories: CalendarCategory[] = [
     { id: 'bryntum-team', label: 'Bryntum team', color: 'blue' },

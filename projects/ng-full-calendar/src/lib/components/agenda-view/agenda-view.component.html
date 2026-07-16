@@ -17,7 +17,8 @@
             <span class="ngfc-agenda-endlabel">Ends {{ formatEndDate(event) }}</span>
             <span
               class="ngfc-event ngfc-agenda-tag"
-              [class]="'ngfc-color-' + (event.color || 'blue')"
+              [class]="colorClass(event.color)"
+              [ngStyle]="colorStyle(event.color)"
               (click)="onEventClick(event)"
             >
               {{ event.title }} &#8250;
@@ -29,7 +30,11 @@
           <div class="ngfc-agenda-line ngfc-agenda-event" (click)="onEventClick(event)">
             <span class="ngfc-agenda-time">{{ formatTimeRange(event) }}</span>
             <span class="ngfc-agenda-item">
-              <span class="ngfc-event ngfc-agenda-dot" [class]="'ngfc-color-' + (event.color || 'blue')"></span>
+              <span
+                class="ngfc-event ngfc-agenda-dot"
+                [class]="dotColorClass(event.color)"
+                [ngStyle]="dotColorStyle(event.color)"
+              ></span>
               <span class="ngfc-agenda-title">{{ event.title }}</span>
             </span>
           </div>

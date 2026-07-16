@@ -16,7 +16,7 @@
             @for (item of week.spanningEvents; track item.event.id) {
               <div
                 class="ngfc-event ngfc-banner-bar"
-                [class]="'ngfc-color-' + (item.event.color || 'blue')"
+                [class]="colorClass(item.event.color)"
                 [class.ngfc-banner-continues-before]="item.continuesBefore"
                 [class.ngfc-banner-continues-after]="item.continuesAfter"
                 [ngStyle]="spanningEventStyle(item)"
@@ -46,10 +46,11 @@
 
               <div class="ngfc-month-cell-events">
                 @for (event of visibleEvents(day); track event.id) {
-                  @if (event.allDay) {
+                  @if (isPillEvent(event)) {
                     <div
                       class="ngfc-event ngfc-event-pill"
-                      [class]="'ngfc-color-' + (event.color || 'blue')"
+                      [class]="colorClass(event.color)"
+                      [ngStyle]="colorStyle(event.color)"
                       (click)="onEventClick(event, $event)"
                       [title]="event.title"
                     >
@@ -57,7 +58,11 @@
                     </div>
                   } @else {
                     <div class="ngfc-event-dotrow" (click)="onEventClick(event, $event)" [title]="event.title">
-                      <span class="ngfc-event ngfc-event-dot" [class]="'ngfc-color-' + (event.color || 'blue')"></span>
+                      <span
+                        class="ngfc-event ngfc-event-dot"
+                        [class]="dotColorClass(event.color)"
+                        [ngStyle]="dotColorStyle(event.color)"
+                      ></span>
                       <span class="ngfc-event-time">{{ event.start | date: 'shortTime' }}</span>
                       <span class="ngfc-event-title">{{ event.title }}</span>
                     </div>

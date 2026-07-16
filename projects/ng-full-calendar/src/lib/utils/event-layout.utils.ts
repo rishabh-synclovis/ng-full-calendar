@@ -1,30 +1,45 @@
 import { CalendarEvent, PositionedEvent, SpanningEvent } from '../models/calendar-event.model';
 import { isSameDay, minutesSinceMidnight, startOfDay } from './date.utils';
 
+/**
+ * True when an event spans more than one calendar day — either explicitly marked
+ * `allDay`, or simply because its start and end fall on different days (e.g. a
+ * holiday or multi-day event with real start/end timestamps but no allDay flag).
+ * These render as a continuous banner strip instead of a per-day timed block.
+ */
+export function isMultiDay(event: CalendarEvent): boolean {
+  return event.allDay === true || !isSameDay(event.start, event.end);
+}
+
+/**
+ * True when a single-day event has no meaningful time-of-day (explicitly `allDay`,
+ * or its start and end both sit at midnight) — rendered as a solid pill rather
+ * than a dot + time row.
+ */
+export function isEffectivelyAllDay(event: CalendarEvent): boolean {
+  if (event.allDay === true) {
+    return true;
+  }
+  const isMidnight = (d: Date) => d.getHours() === 0 && d.getMinutes() === 0;
+  return isMidnight(event.start) && isMidnight(event.end);
+}
+
 export function eventsForDay(events: CalendarEvent[], day: Date): CalendarEvent[] {
-  return events.filter((e) => !e.allDay && isSameDay(e.start, day));
+  return events.filter((e) => !isMultiDay(e) && !isEffectivelyAllDay(e) && isSameDay(e.start, day));
 }
 
-export function allDayEventsInRange(events: CalendarEvent[], rangeStart: Date, rangeEnd: Date): CalendarEvent[] {
-  return events.filter((e) => e.allDay && e.start <= rangeEnd && e.end >= rangeStart);
-}
-
-function isMultiDay(event: CalendarEvent): boolean {
-  return event.allDay === true && !isSameDay(event.start, event.end);
-}
-
-/** All-day events spanning more than one calendar day, e.g. a multi-day conference or vacation. */
+/** Multi-day events (see `isMultiDay`) visible within the range — rendered as banner strips. */
 export function spanningEventsInRange(events: CalendarEvent[], rangeStart: Date, rangeEnd: Date): CalendarEvent[] {
   return events.filter((e) => isMultiDay(e) && e.start <= rangeEnd && e.end >= rangeStart);
 }
 
 /** Single-day all-day events (not spanning banners) visible within the range. */
 export function singleDayAllDayEventsInRange(events: CalendarEvent[], rangeStart: Date, rangeEnd: Date): CalendarEvent[] {
-  return events.filter((e) => e.allDay === true && !isMultiDay(e) && e.start <= rangeEnd && e.end >= rangeStart);
+  return events.filter((e) => isEffectivelyAllDay(e) && !isMultiDay(e) && e.start <= rangeEnd && e.end >= rangeStart);
 }
 
 /**
- * Lays out multi-day all-day events as continuous banner bars across a row of `days`,
+ * Lays out multi-day events as continuous banner bars across a row of `days`,
  * stacking overlapping events into lanes, mirroring Google Calendar / Bryntum banner rows.
  */
 export function layoutSpanningEvents(events: CalendarEvent[], days: Date[]): SpanningEvent[] {

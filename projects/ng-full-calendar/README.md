@@ -118,7 +118,8 @@ interface CalendarEvent {
   start: Date;
   end: Date;
   allDay?: boolean;
-  color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange' | 'teal' | 'gray';
+  /** One of the 8 named colors, or any hex string like '#DA2C43'. */
+  color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange' | 'teal' | 'gray' | string;
   description?: string;
   location?: string;
   editable?: boolean;
@@ -127,6 +128,29 @@ interface CalendarEvent {
   meta?: unknown;
 }
 ```
+
+### Custom hex colors
+
+`color` accepts any hex string in addition to the 8 named presets — useful when colors come from an external system (e.g. a CMS or admin-configured color picker) instead of a fixed palette:
+
+```ts
+events: CalendarEvent[] = [
+  { id: '1', title: 'Founders Day', start, end, color: '#DA2C43' },
+  { id: '2', title: 'Staff Meeting', start, end, color: 'blue' }, // named colors still work
+];
+```
+
+The library automatically derives a readable pastel background and text shade from the hex value — you don't need to supply matching background/text colors yourself.
+
+### Multi-day events
+
+Any event whose `start` and `end` fall on different calendar days automatically renders as a continuous banner strip spanning those days in month and week view (e.g. a week-long holiday or conference), instead of repeating as a separate block on each day. This works whether or not `allDay` is set — an event is treated as multi-day purely by comparing its start/end dates:
+
+```ts
+{ id: '1', title: 'Term Break', start: new Date('2026-07-13'), end: new Date('2026-07-20') }
+```
+
+Same-day events (even with real start/end timestamps, like a 2-hour meeting) render as normal timed blocks or dots, not banners.
 
 ### Hiding the sidebar
 

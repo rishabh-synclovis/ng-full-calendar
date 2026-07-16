@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarEvent, PositionedEvent, SpanningEvent } from '../../models/calendar-event.model';
+import { CalendarEvent, CalendarEventColor, PositionedEvent, SpanningEvent } from '../../models/calendar-event.model';
 import {
   eventsForDay,
   layoutDayEvents,
@@ -20,6 +20,7 @@ import {
   singleDayAllDayEventsInRange,
 } from '../../utils/event-layout.utils';
 import { buildWeekGrid, isSameDay, isToday, minutesSinceMidnight } from '../../utils/date.utils';
+import { resolveEventColor, resolveEventDotColor } from '../../utils/color.utils';
 
 const HOUR_HEIGHT_PX = 48;
 
@@ -113,7 +114,24 @@ export class WeekViewComponent implements OnChanges, OnInit, AfterViewInit, OnDe
     return {
       'grid-column': `${item.startCol + 1} / ${item.endCol + 2}`,
       'grid-row': `${item.lane + 1}`,
+      ...(this.colorStyle(item.event.color) ?? {}),
     };
+  }
+
+  colorClass(color: CalendarEventColor | undefined): string | null {
+    return resolveEventColor(color).className;
+  }
+
+  colorStyle(color: CalendarEventColor | undefined): Record<string, string> | null {
+    return resolveEventColor(color).style;
+  }
+
+  dotColorClass(color: CalendarEventColor | undefined): string | null {
+    return resolveEventDotColor(color).className;
+  }
+
+  dotColorStyle(color: CalendarEventColor | undefined): Record<string, string> | null {
+    return resolveEventDotColor(color).style;
   }
 
   onSpanningEventClick(item: SpanningEvent, domEvent: Event): void {

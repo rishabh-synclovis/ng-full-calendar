@@ -1,4 +1,4 @@
-export type CalendarEventColor =
+export type CalendarNamedColor =
   | 'blue'
   | 'green'
   | 'red'
@@ -7,6 +7,9 @@ export type CalendarEventColor =
   | 'orange'
   | 'teal'
   | 'gray';
+
+/** One of the 8 built-in named colors, or any CSS hex color (e.g. `'#DA2C43'`). */
+export type CalendarEventColor = CalendarNamedColor | (string & {});
 
 export interface CalendarCategory {
   id: string;
@@ -20,6 +23,7 @@ export interface CalendarEvent<TMeta = unknown> {
   start: Date;
   end: Date;
   allDay?: boolean;
+  /** One of the 8 named colors ('blue', 'red', ...) or any hex color string (e.g. '#DA2C43'). */
   color?: CalendarEventColor;
   description?: string;
   location?: string;

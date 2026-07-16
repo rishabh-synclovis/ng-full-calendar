@@ -20,7 +20,7 @@
         @for (item of spanningEvents; track item.event.id) {
           <div
             class="ngfc-event ngfc-banner-bar"
-            [class]="'ngfc-color-' + (item.event.color || 'blue')"
+            [class]="colorClass(item.event.color)"
             [class.ngfc-banner-continues-before]="item.continuesBefore"
             [class.ngfc-banner-continues-after]="item.continuesAfter"
             [ngStyle]="spanningEventStyle(item)"
@@ -42,7 +42,8 @@
           @for (event of dayEvents; track event.id) {
             <div
               class="ngfc-event ngfc-event-pill"
-              [class]="'ngfc-color-' + (event.color || 'blue')"
+              [class]="colorClass(event.color)"
+              [ngStyle]="colorStyle(event.color)"
               (click)="onEventClick(event, $event)"
             >
               {{ event.title }}
@@ -78,12 +79,13 @@
           @for (item of positionedByDay[dayIndex]; track item.event.id) {
             <div
               class="ngfc-event ngfc-timed-event"
-              [class]="'ngfc-color-' + (item.event.color || 'blue')"
+              [class]="colorClass(item.event.color)"
               [class.ngfc-timed-event-short]="isShortEvent(item)"
               [style.top.px]="eventTop(item)"
               [style.height.px]="eventHeight(item)"
               [style.width.%]="eventWidthPercent(item)"
               [style.left.%]="eventLeftPercent(item)"
+              [ngStyle]="colorStyle(item.event.color)"
               (click)="onEventClick(item.event, $event)"
               [title]="item.event.title"
             >

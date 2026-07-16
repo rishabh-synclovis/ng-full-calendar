@@ -10,15 +10,20 @@
       <input type="range" min="10" max="24" [(ngModel)]="fontSize" />
       {{ fontSize }}px
     </label>
+
+    <label>
+      <input type="checkbox" [(ngModel)]="useApiData" (ngModelChange)="onDataSourceChange()" />
+      Use real API event shape (hex colors, custom multi-day)
+    </label>
   </div>
 
   <main class="demo-main">
     <ngfc-calendar
       [events]="events"
-      [categories]="categories"
+      [categories]="useApiData ? null : categories"
       [showSidebar]="showSidebar"
       [fontSize]="fontSize"
-      view="week"
+      view="month"
       [editable]="true"
       (navigate)="onNavigate($event)"
       (eventsChange)="onEventsChange($event)"

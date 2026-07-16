@@ -71,6 +71,21 @@
                 [attr.aria-label]="c"
               ></button>
             }
+            <label
+              class="ngfc-swatch ngfc-custom-swatch"
+              [class.ngfc-swatch-selected]="isCustomColorSelected"
+              [style.background]="customColor"
+              title="Custom color"
+              (click)="selectCustomColor()"
+            >
+              <input
+                type="color"
+                class="ngfc-custom-color-input"
+                [value]="customColor"
+                (input)="onCustomColorChange($any($event.target).value)"
+                aria-label="Custom color"
+              />
+            </label>
           </div>
         </div>
       </div>

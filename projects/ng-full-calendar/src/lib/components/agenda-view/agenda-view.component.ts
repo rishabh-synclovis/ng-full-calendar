@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarEvent } from '../../models/calendar-event.model';
-import { isSameDay, isToday, startOfDay } from '../../utils/date.utils';
+import { CalendarEvent, CalendarEventColor } from '../../models/calendar-event.model';
+import { isToday, startOfDay } from '../../utils/date.utils';
+import { isEffectivelyAllDay, isMultiDay } from '../../utils/event-layout.utils';
+import { resolveEventColor, resolveEventDotColor } from '../../utils/color.utils';
 
 export interface AgendaGroup {
   date: Date;
@@ -11,10 +13,6 @@ export interface AgendaGroup {
 }
 
 const AGENDA_RANGE_DAYS = 30;
-
-function isSpanning(event: CalendarEvent): boolean {
-  return event.allDay === true && !isSameDay(event.start, event.end);
-}
 
 @Component({
   selector: 'ngfc-agenda-view',
@@ -56,7 +54,7 @@ export class AgendaViewComponent implements OnChanges {
       byDay.set(startOfDay(d).getTime(), []);
     }
     for (const event of inRange) {
-      if (isSpanning(event)) {
+      if (isMultiDay(event)) {
         for (let d = new Date(Math.max(event.start.getTime(), rangeStart.getTime())); d <= event.end && d < rangeEnd; d.setDate(d.getDate() + 1)) {
           const key = startOfDay(d).getTime();
           if (byDay.has(key)) {
@@ -77,8 +75,8 @@ export class AgendaViewComponent implements OnChanges {
       .map(([time, events]) => ({
         date: new Date(time),
         isToday: isToday(new Date(time)),
-        bannerEvents: events.filter(isSpanning),
-        timedEvents: events.filter((e) => !isSpanning(e)),
+        bannerEvents: events.filter(isMultiDay),
+        timedEvents: events.filter((e) => !isMultiDay(e)),
       }));
   }
 
@@ -87,11 +85,27 @@ export class AgendaViewComponent implements OnChanges {
   }
 
   formatTimeRange(event: CalendarEvent): string {
-    if (event.allDay) {
+    if (isEffectivelyAllDay(event)) {
       return 'All day';
     }
     const opts: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
     return `${event.start.toLocaleTimeString(undefined, opts)} - ${event.end.toLocaleTimeString(undefined, opts)}`;
+  }
+
+  colorClass(color: CalendarEventColor | undefined): string | null {
+    return resolveEventColor(color).className;
+  }
+
+  colorStyle(color: CalendarEventColor | undefined): Record<string, string> | null {
+    return resolveEventColor(color).style;
+  }
+
+  dotColorClass(color: CalendarEventColor | undefined): string | null {
+    return resolveEventDotColor(color).className;
+  }
+
+  dotColorStyle(color: CalendarEventColor | undefined): Record<string, string> | null {
+    return resolveEventDotColor(color).style;
   }
 
   onEventClick(event: CalendarEvent): void {

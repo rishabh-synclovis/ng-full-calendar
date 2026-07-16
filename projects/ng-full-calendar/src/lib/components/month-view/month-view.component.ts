@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarDay, CalendarEvent, SpanningEvent } from '../../models/calendar-event.model';
+import { CalendarDay, CalendarEvent, CalendarEventColor, SpanningEvent } from '../../models/calendar-event.model';
 import { buildMonthGrid, isSameDay, isToday } from '../../utils/date.utils';
-import { layoutSpanningEvents } from '../../utils/event-layout.utils';
+import { isEffectivelyAllDay, isMultiDay, layoutSpanningEvents } from '../../utils/event-layout.utils';
+import { resolveEventColor, resolveEventDotColor } from '../../utils/color.utils';
 
 const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MAX_VISIBLE_EVENTS = 3;
@@ -46,7 +47,7 @@ export class MonthViewComponent implements OnChanges {
       isToday: isToday(day),
       isWeekend: day.getDay() === 0 || day.getDay() === 6,
       events: this.events
-        .filter((e) => this.eventOccursOnDay(e, day) && !this.isSpanning(e))
+        .filter((e) => this.eventOccursOnDay(e, day) && !isMultiDay(e))
         .sort((a, b) => a.start.getTime() - b.start.getTime()),
     }));
 
@@ -63,12 +64,8 @@ export class MonthViewComponent implements OnChanges {
     return weeks;
   }
 
-  private isSpanning(event: CalendarEvent): boolean {
-    return event.allDay === true && !isSameDay(event.start, event.end);
-  }
-
   private eventOccursOnDay(event: CalendarEvent, day: Date): boolean {
-    if (event.allDay) {
+    if (isMultiDay(event)) {
       return event.start <= day && event.end >= day;
     }
     return isSameDay(event.start, day);
@@ -86,7 +83,28 @@ export class MonthViewComponent implements OnChanges {
     return {
       'grid-column': `${item.startCol + 1} / ${item.endCol + 2}`,
       'grid-row': `${item.lane + 1}`,
+      ...(this.colorStyle(item.event.color) ?? {}),
     };
+  }
+
+  colorClass(color: CalendarEventColor | undefined): string | null {
+    return resolveEventColor(color).className;
+  }
+
+  colorStyle(color: CalendarEventColor | undefined): Record<string, string> | null {
+    return resolveEventColor(color).style;
+  }
+
+  dotColorClass(color: CalendarEventColor | undefined): string | null {
+    return resolveEventDotColor(color).className;
+  }
+
+  dotColorStyle(color: CalendarEventColor | undefined): Record<string, string> | null {
+    return resolveEventDotColor(color).style;
+  }
+
+  isPillEvent(event: CalendarEvent): boolean {
+    return isEffectivelyAllDay(event);
   }
 
   onDayClick(day: CalendarDay): void {
