@@ -55,6 +55,7 @@
 
 .ngfc-banner-row {
   display: grid;
+  grid-column: 2 / -1;
   gap: 2px 0;
   padding: 3px 0;
 }
