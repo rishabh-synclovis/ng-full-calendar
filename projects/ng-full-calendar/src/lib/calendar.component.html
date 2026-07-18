@@ -7,6 +7,7 @@
         [categories]="resolvedCategories"
         [activeCategoryIds]="activeCategoryIds"
         [filterText]="filterText"
+        [locale]="locale"
         (selectedDateChange)="onSidebarDateChange($event)"
         (filterTextChange)="onFilterTextChange($event)"
         (categoryToggle)="onCategoryToggle($event)"
@@ -33,6 +34,7 @@
             [date]="date"
             [events]="filteredEvents"
             [weekStartsOn]="weekStartsOn"
+            [locale]="locale"
             (dayClick)="onDayClick($event)"
             (eventClick)="onEventClick($event)"
             (moreClick)="onMoreClick($event)"
@@ -44,6 +46,7 @@
             [events]="filteredEvents"
             [weekStartsOn]="weekStartsOn"
             [singleDay]="false"
+            [locale]="locale"
             (eventClick)="onEventClick($event)"
             (slotClick)="onSlotClick($event)"
           ></ngfc-week-view>
@@ -53,6 +56,7 @@
             [date]="date"
             [events]="filteredEvents"
             [singleDay]="true"
+            [locale]="locale"
             (eventClick)="onEventClick($event)"
             (slotClick)="onSlotClick($event)"
           ></ngfc-week-view>
@@ -62,6 +66,7 @@
             [date]="date"
             [events]="filteredEvents"
             [rangeDays]="agendaRangeDays"
+            [locale]="locale"
             (eventClick)="onEventClick($event)"
           ></ngfc-agenda-view>
         }

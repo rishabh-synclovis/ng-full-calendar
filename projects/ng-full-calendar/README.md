@@ -97,6 +97,7 @@ Give the calendar's container a height (e.g. `height: 100vh` or a fixed value) �
 | `showSidebar` | `boolean` | `true` | Shows/hides the left sidebar (mini calendar, filter box, category checkboxes). Set to `false` for a calendar-only layout with no sidebar |
 | `categories` | `CalendarCategory[] \| null` | `null` | Sidebar filter checkboxes. When `null`, categories are auto-derived from each event's `calendarId` |
 | `fontSize` | `string \| number \| null` | `null` (uses the built-in `16px`) | Base font size for the whole calendar. A number is treated as pixels (`14`), or pass any CSS length (`'0.9rem'`, `'90%'`). Every label, button, and event chip scales proportionally from this one value |
+| `locale` | `CalendarLocale \| null` | `null` (English, 12h) | Custom weekday/month names and 12h/24h time format — see [Translating weekday/month names](#translating-weekdaymonth-names--12h24h-time) below |
 
 ### Outputs
 
@@ -155,6 +156,37 @@ Any event whose `start` and `end` fall on different calendar days automatically 
 ```
 
 Same-day events (even with real start/end timestamps, like a 2-hour meeting) render as normal timed blocks or dots, not banners.
+
+### Translating weekday/month names + 12h/24h time
+
+Weekday names, month names, and time-of-day formatting don't depend on the browser locale — pass a `CalendarLocale` object via `[locale]` to translate them or switch to 24-hour time. Any field you leave out falls back to the English default:
+
+```ts
+import { CalendarLocale } from 'ng-full-calendar';
+
+const frenchLocale: CalendarLocale = {
+  weekdayNamesShort: ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'],
+  weekdayNamesLong: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+  monthNamesShort: ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'],
+  monthNamesLong: [
+    'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
+  ],
+  timeFormat: '24h',
+};
+```
+
+```html
+<ngfc-calendar [events]="events" [locale]="frenchLocale"></ngfc-calendar>
+```
+
+Each array is a fixed-length tuple (7 weekday names starting from Sunday, 12 month names starting from January) so TypeScript will flag a missing entry. If you only want to switch to 24-hour time and keep English names, pass just that field:
+
+```html
+<ngfc-calendar [events]="events" [locale]="{ timeFormat: '24h' }"></ngfc-calendar>
+```
+
+`timeFormat` affects every rendered time — month-view event dots, week/day-view hour labels and event blocks (now showing the full start–end range, not just the start time), and agenda-view time ranges.
 
 ### Mapping data from a REST API
 

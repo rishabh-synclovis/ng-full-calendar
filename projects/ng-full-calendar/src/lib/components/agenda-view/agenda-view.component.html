@@ -6,9 +6,9 @@
   @for (group of groups; track group.date.getTime()) {
     <div class="ngfc-agenda-row">
       <div class="ngfc-agenda-date" [class.ngfc-agenda-date-today]="group.isToday">
-        <span class="ngfc-agenda-daynum">{{ group.date | date: 'd' }}</span>
-        <span class="ngfc-agenda-weekday">{{ group.date | date: 'EEEE' }}</span>
-        <span class="ngfc-agenda-month">{{ group.date | date: 'MMM yyyy' }}</span>
+        <span class="ngfc-agenda-daynum">{{ group.date.getDate() }}</span>
+        <span class="ngfc-agenda-weekday">{{ weekdayLongName(group.date) }}</span>
+        <span class="ngfc-agenda-month">{{ monthShortName(group.date) }} {{ group.date.getFullYear() }}</span>
       </div>
 
       <div class="ngfc-agenda-content">

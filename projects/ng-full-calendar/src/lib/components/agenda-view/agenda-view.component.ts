@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarEvent, CalendarEventColor } from '../../models/calendar-event.model';
-import { isToday, startOfDay } from '../../utils/date.utils';
+import { CalendarLocale, resolveLocale } from '../../models/calendar-locale.model';
+import { formatTime, isToday, startOfDay } from '../../utils/date.utils';
 import { isEffectivelyAllDay, isMultiDay } from '../../utils/event-layout.utils';
 import { resolveEventColor, resolveEventDotColor } from '../../utils/color.utils';
 
@@ -26,14 +27,17 @@ export class AgendaViewComponent implements OnChanges {
   @Input({ required: true }) date!: Date;
   @Input() events: CalendarEvent[] = [];
   @Input() rangeDays = AGENDA_RANGE_DAYS;
+  @Input() locale: CalendarLocale | null = null;
 
   @Output() eventClick = new EventEmitter<CalendarEvent>();
 
   groups: AgendaGroup[] = [];
   totalEventCount = 0;
   rangeLabel = '';
+  private resolvedLocale = resolveLocale(null);
 
   ngOnChanges(): void {
+    this.resolvedLocale = resolveLocale(this.locale);
     this.groups = this.buildGroups();
     this.totalEventCount = new Set(this.groups.flatMap((g) => [...g.bannerEvents, ...g.timedEvents].map((e) => e.id)))
       .size;
@@ -81,15 +85,22 @@ export class AgendaViewComponent implements OnChanges {
   }
 
   formatEndDate(event: CalendarEvent): string {
-    return event.end.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+    return `${event.end.getDate()} ${this.resolvedLocale.monthNamesShort[event.end.getMonth()]}`;
   }
 
   formatTimeRange(event: CalendarEvent): string {
     if (isEffectivelyAllDay(event)) {
       return 'All day';
     }
-    const opts: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
-    return `${event.start.toLocaleTimeString(undefined, opts)} - ${event.end.toLocaleTimeString(undefined, opts)}`;
+    return `${formatTime(event.start, this.resolvedLocale.timeFormat)} - ${formatTime(event.end, this.resolvedLocale.timeFormat)}`;
+  }
+
+  weekdayLongName(date: Date): string {
+    return this.resolvedLocale.weekdayNamesLong[date.getDay()];
+  }
+
+  monthShortName(date: Date): string {
+    return this.resolvedLocale.monthNamesShort[date.getMonth()];
   }
 
   colorClass(color: CalendarEventColor | undefined): string | null {

@@ -21,6 +21,19 @@
       Custom click handling (disables built-in popup)
     </label>
 
+    <label>
+      <input type="checkbox" [(ngModel)]="useFrenchLocale" />
+      French weekday/month names
+    </label>
+
+    <label>
+      Time format
+      <select [(ngModel)]="timeFormat">
+        <option value="12h">12h</option>
+        <option value="24h">24h</option>
+      </select>
+    </label>
+
     @if (customClickMode && lastCustomClick) {
       <span class="demo-click-log">{{ lastCustomClick }}</span>
     }
@@ -32,6 +45,7 @@
       [categories]="useApiData ? null : categories"
       [showSidebar]="showSidebar"
       [fontSize]="fontSize"
+      [locale]="locale"
       view="month"
       [editable]="!customClickMode"
       (navigate)="onNavigate($event)"

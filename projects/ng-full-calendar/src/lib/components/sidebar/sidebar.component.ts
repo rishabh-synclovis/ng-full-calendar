@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MiniCalendarComponent } from '../mini-calendar/mini-calendar.component';
 import { CalendarCategory } from '../../models/calendar-event.model';
+import { CalendarLocale } from '../../models/calendar-locale.model';
 
 @Component({
   selector: 'ngfc-sidebar',
@@ -18,6 +19,7 @@ export class SidebarComponent {
   @Input() categories: CalendarCategory[] = [];
   @Input() activeCategoryIds: Set<string> = new Set();
   @Input() filterText = '';
+  @Input() locale: CalendarLocale | null = null;
 
   @Output() selectedDateChange = new EventEmitter<Date>();
   @Output() filterTextChange = new EventEmitter<string>();

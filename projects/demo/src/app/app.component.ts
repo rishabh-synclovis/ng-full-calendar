@@ -1,8 +1,25 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CalendarCategory, CalendarComponent, CalendarEvent, CalendarNavigateEvent } from 'ng-full-calendar';
+import {
+  CalendarCategory,
+  CalendarComponent,
+  CalendarEvent,
+  CalendarLocale,
+  CalendarNavigateEvent,
+  CalendarTimeFormat,
+} from 'ng-full-calendar';
 import { buildSampleEvents } from './sample-events';
 import { buildApiSampleEvents } from './api-events';
+
+const FRENCH_LOCALE: CalendarLocale = {
+  weekdayNamesShort: ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'],
+  weekdayNamesLong: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+  monthNamesShort: ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'],
+  monthNamesLong: [
+    'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
+  ],
+};
 
 @Component({
   selector: 'app-root',
@@ -19,6 +36,12 @@ export class AppComponent {
   fontSize = 16;
   customClickMode = false;
   lastCustomClick = '';
+  useFrenchLocale = false;
+  timeFormat: CalendarTimeFormat = '12h';
+
+  get locale(): CalendarLocale | null {
+    return this.useFrenchLocale ? { ...FRENCH_LOCALE, timeFormat: this.timeFormat } : { timeFormat: this.timeFormat };
+  }
 
   onDataSourceChange(): void {
     this.events = this.useApiData ? buildApiSampleEvents() : buildSampleEvents();

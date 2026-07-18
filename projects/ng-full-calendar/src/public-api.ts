@@ -13,6 +13,7 @@ export * from './lib/components/mini-calendar/mini-calendar.component';
 
 export * from './lib/models/calendar-event.model';
 export * from './lib/models/calendar-view.model';
+export * from './lib/models/calendar-locale.model';
 
 export * from './lib/utils/date.utils';
 export * from './lib/utils/event-layout.utils';

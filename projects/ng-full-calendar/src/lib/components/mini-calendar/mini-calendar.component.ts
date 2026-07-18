@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CalendarLocale, resolveLocale } from '../../models/calendar-locale.model';
 import { addMonths, buildMonthGrid, isSameDay, isToday } from '../../utils/date.utils';
 
 interface MiniDay {
@@ -8,8 +9,6 @@ interface MiniDay {
   isToday: boolean;
   isSelected: boolean;
 }
-
-const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 @Component({
   selector: 'ngfc-mini-calendar',
@@ -22,17 +21,26 @@ const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 export class MiniCalendarComponent implements OnChanges {
   @Input({ required: true }) selectedDate!: Date;
   @Input() weekStartsOn: 0 | 1 = 0;
+  @Input() locale: CalendarLocale | null = null;
 
   @Output() selectedDateChange = new EventEmitter<Date>();
 
-  readonly weekdayLabels = WEEKDAY_LABELS;
   /** The month currently displayed — may differ from selectedDate while browsing. */
   displayMonth = new Date();
   weeks: MiniDay[][] = [];
+  weekdayLabels: string[] = [];
+  private resolvedLocale = resolveLocale(null);
 
   ngOnChanges(): void {
+    this.resolvedLocale = resolveLocale(this.locale);
+    this.weekdayLabels = this.buildWeekdayLabels();
     this.displayMonth = this.selectedDate;
     this.rebuild();
+  }
+
+  private buildWeekdayLabels(): string[] {
+    const names = this.resolvedLocale.weekdayNamesShort;
+    return Array.from({ length: 7 }, (_, i) => names[(i + this.weekStartsOn) % 7].charAt(0));
   }
 
   private rebuild(): void {
@@ -51,7 +59,7 @@ export class MiniCalendarComponent implements OnChanges {
   }
 
   get monthLabel(): string {
-    return this.displayMonth.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+    return `${this.resolvedLocale.monthNamesLong[this.displayMonth.getMonth()]} ${this.displayMonth.getFullYear()}`;
   }
 
   previousMonth(): void {

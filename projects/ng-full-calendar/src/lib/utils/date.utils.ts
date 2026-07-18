@@ -86,24 +86,43 @@ export function clampToDay(date: Date, day: Date): Date {
   return clamped;
 }
 
-export function formatMonthTitle(date: Date): string {
-  return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+export function formatMonthTitle(date: Date, monthNamesLong: readonly string[]): string {
+  return `${monthNamesLong[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-export function formatWeekRangeTitle(date: Date, weekStartsOn: 0 | 1 = 0): string {
+export function formatWeekRangeTitle(
+  date: Date,
+  weekStartsOn: 0 | 1 = 0,
+  monthNamesShort: readonly string[]
+): string {
   const start = startOfWeek(date, weekStartsOn);
   const end = endOfWeek(date, weekStartsOn);
   const sameMonth = start.getMonth() === end.getMonth();
-  const startStr = start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  const endStr = end.toLocaleDateString(
-    undefined,
-    sameMonth ? { day: 'numeric', year: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' }
-  );
+  const startStr = `${monthNamesShort[start.getMonth()]} ${start.getDate()}`;
+  const endStr = sameMonth
+    ? `${end.getDate()}, ${end.getFullYear()}`
+    : `${monthNamesShort[end.getMonth()]} ${end.getDate()}, ${end.getFullYear()}`;
   return `${startStr} – ${endStr}`;
 }
 
-export function formatDayTitle(date: Date): string {
-  return date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+export function formatDayTitle(
+  date: Date,
+  weekdayNamesLong: readonly string[],
+  monthNamesLong: readonly string[]
+): string {
+  return `${weekdayNamesLong[date.getDay()]}, ${monthNamesLong[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+}
+
+/** Formats a time-of-day as 12-hour ('9:05 AM') or 24-hour ('09:05') per `timeFormat`. */
+export function formatTime(date: Date, timeFormat: '12h' | '24h'): string {
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  if (timeFormat === '24h') {
+    const hours = String(date.getHours()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+  const hour12 = date.getHours() % 12 || 12;
+  const suffix = date.getHours() < 12 ? 'AM' : 'PM';
+  return `${hour12}:${minutes} ${suffix}`;
 }
 
 /** ISO-8601 week number (1-53). */

@@ -2,13 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnI
 import { CommonModule } from '@angular/common';
 import { CalendarCategory, CalendarEvent } from './models/calendar-event.model';
 import { CalendarNavigateEvent, CalendarView } from './models/calendar-view.model';
-import {
-  addDays,
-  addMonths,
-  formatDayTitle,
-  formatMonthTitle,
-  formatWeekRangeTitle,
-} from './utils/date.utils';
+import { CalendarLocale, resolveLocale } from './models/calendar-locale.model';
+import { addDays, addMonths, formatDayTitle, formatMonthTitle } from './utils/date.utils';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { MonthViewComponent } from './components/month-view/month-view.component';
 import { WeekViewComponent } from './components/week-view/week-view.component';
@@ -49,6 +44,8 @@ export class CalendarComponent implements OnInit, OnChanges {
   @Input() categories: CalendarCategory[] | null = null;
   /** Base font size for the whole calendar — a number is treated as pixels (e.g. `14`), or pass any CSS length (e.g. `'0.9rem'`). Everything scales proportionally from this. */
   @Input() fontSize: string | number | null = null;
+  /** Custom weekday/month names and 12h/24h time format, for translation. Unset fields fall back to English defaults. */
+  @Input() locale: CalendarLocale | null = null;
 
   @Output() viewChange = new EventEmitter<CalendarView>();
   @Output() dateChange = new EventEmitter<Date>();
@@ -64,6 +61,7 @@ export class CalendarComponent implements OnInit, OnChanges {
   title = '';
   localEvents: CalendarEvent[] = [];
   filteredEvents: CalendarEvent[] = [];
+  resolvedLocale = resolveLocale(null);
 
   filterText = '';
   resolvedCategories: CalendarCategory[] = [];
@@ -85,7 +83,10 @@ export class CalendarComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['date'] || changes['view']) {
+    if (changes['locale']) {
+      this.resolvedLocale = resolveLocale(this.locale);
+    }
+    if (changes['date'] || changes['view'] || changes['locale']) {
       this.title = this.computeTitle();
     }
     if (changes['events'] || changes['categories']) {
@@ -137,13 +138,13 @@ export class CalendarComponent implements OnInit, OnChanges {
   private computeTitle(): string {
     switch (this.view) {
       case 'month':
-        return formatMonthTitle(this.date);
+        return formatMonthTitle(this.date, this.resolvedLocale.monthNamesLong);
       case 'week':
-        return formatMonthTitle(this.date);
+        return formatMonthTitle(this.date, this.resolvedLocale.monthNamesLong);
       case 'day':
-        return formatDayTitle(this.date);
+        return formatDayTitle(this.date, this.resolvedLocale.weekdayNamesLong, this.resolvedLocale.monthNamesLong);
       case 'agenda':
-        return formatMonthTitle(this.date);
+        return formatMonthTitle(this.date, this.resolvedLocale.monthNamesLong);
     }
   }
 

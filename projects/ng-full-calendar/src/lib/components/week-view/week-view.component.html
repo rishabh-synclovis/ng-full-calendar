@@ -3,7 +3,7 @@
     <div class="ngfc-week-gutter"></div>
     @for (day of days; track day.getTime()) {
       <div class="ngfc-week-day-header" [class.ngfc-week-day-header-today]="isTodayColumn(day)">
-        <div class="ngfc-week-day-name">{{ day | date: 'EEE' }}</div>
+        <div class="ngfc-week-day-name">{{ weekdayShortName(day) }}</div>
         <div class="ngfc-week-day-number">{{ day | date: 'd' }}</div>
       </div>
     }
@@ -60,7 +60,7 @@
         @for (hour of hours; track hour) {
           <div class="ngfc-hour-label" [style.height.px]="hourHeight">
             @if (hour > 0) {
-              <span>{{ hour === 12 ? '12 PM' : hour > 12 ? (hour - 12) + ' PM' : hour + ' AM' }}</span>
+              <span>{{ hourLabel(hour) }}</span>
             }
           </div>
         }
@@ -90,7 +90,7 @@
               [title]="item.event.title"
             >
               <span class="ngfc-event-title">{{ item.event.title }}</span>
-              <span class="ngfc-event-time">{{ item.event.start | date: 'shortTime' }}</span>
+              <span class="ngfc-event-time">{{ formatEventTimeRange(item) }}</span>
             </div>
           }
         </div>

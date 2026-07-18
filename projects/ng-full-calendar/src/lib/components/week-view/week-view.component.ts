@@ -13,13 +13,14 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarEvent, CalendarEventColor, PositionedEvent, SpanningEvent } from '../../models/calendar-event.model';
+import { CalendarLocale, resolveLocale } from '../../models/calendar-locale.model';
 import {
   eventsForDay,
   layoutDayEvents,
   layoutSpanningEvents,
   singleDayAllDayEventsInRange,
 } from '../../utils/event-layout.utils';
-import { buildWeekGrid, isSameDay, isToday, minutesSinceMidnight } from '../../utils/date.utils';
+import { buildWeekGrid, formatTime, isSameDay, isToday, minutesSinceMidnight } from '../../utils/date.utils';
 import { resolveEventColor, resolveEventDotColor } from '../../utils/color.utils';
 
 const HOUR_HEIGHT_PX = 48;
@@ -38,6 +39,7 @@ export class WeekViewComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   @Input() weekStartsOn: 0 | 1 = 0;
   /** When true, renders a single day column instead of a full week. */
   @Input() singleDay = false;
+  @Input() locale: CalendarLocale | null = null;
 
   @Output() eventClick = new EventEmitter<CalendarEvent>();
   @Output() slotClick = new EventEmitter<Date>();
@@ -57,6 +59,7 @@ export class WeekViewComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   private timer: ReturnType<typeof setInterval> | undefined;
   private hasTodayColumn = false;
   private hasScrolledToNow = false;
+  private resolvedLocale = resolveLocale(null);
 
   ngOnInit(): void {
     this.updateNowLine();
@@ -74,6 +77,7 @@ export class WeekViewComponent implements OnChanges, OnInit, AfterViewInit, OnDe
   }
 
   ngOnChanges(): void {
+    this.resolvedLocale = resolveLocale(this.locale);
     this.days = this.singleDay ? [this.date] : buildWeekGrid(this.date, this.weekStartsOn);
     const rangeStart = this.days[0];
     const rangeEnd = this.days[this.days.length - 1];
@@ -145,6 +149,32 @@ export class WeekViewComponent implements OnChanges, OnInit, AfterViewInit, OnDe
 
   isTodayColumn(day: Date): boolean {
     return isToday(day);
+  }
+
+  weekdayShortName(day: Date): string {
+    return this.resolvedLocale.weekdayNamesShort[day.getDay()];
+  }
+
+  /** Hour-gutter row label, e.g. '1 AM' / '13:00', respecting the configured time format. */
+  hourLabel(hour: number): string {
+    if (this.resolvedLocale.timeFormat === '24h') {
+      return `${String(hour).padStart(2, '0')}:00`;
+    }
+    if (hour === 0) {
+      return '12 AM';
+    }
+    if (hour === 12) {
+      return '12 PM';
+    }
+    return hour > 12 ? `${hour - 12} PM` : `${hour} AM`;
+  }
+
+  formatEventTime(date: Date): string {
+    return formatTime(date, this.resolvedLocale.timeFormat);
+  }
+
+  formatEventTimeRange(item: PositionedEvent): string {
+    return `${this.formatEventTime(item.event.start)} – ${this.formatEventTime(item.event.end)}`;
   }
 
   eventTop(item: PositionedEvent): number {

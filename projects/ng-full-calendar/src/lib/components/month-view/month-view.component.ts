@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarDay, CalendarEvent, CalendarEventColor, SpanningEvent } from '../../models/calendar-event.model';
-import { buildMonthGrid, isSameDay, isToday } from '../../utils/date.utils';
+import { CalendarLocale, resolveLocale } from '../../models/calendar-locale.model';
+import { buildMonthGrid, formatTime, isSameDay, isToday } from '../../utils/date.utils';
 import { isEffectivelyAllDay, isMultiDay, layoutSpanningEvents } from '../../utils/event-layout.utils';
 import { resolveEventColor, resolveEventDotColor } from '../../utils/color.utils';
 
-const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MAX_VISIBLE_EVENTS = 3;
 
 interface MonthWeek {
@@ -26,17 +26,30 @@ export class MonthViewComponent implements OnChanges {
   @Input({ required: true }) date!: Date;
   @Input() events: CalendarEvent[] = [];
   @Input() weekStartsOn: 0 | 1 = 0;
+  @Input() locale: CalendarLocale | null = null;
 
   @Output() dayClick = new EventEmitter<Date>();
   @Output() eventClick = new EventEmitter<CalendarEvent>();
   @Output() moreClick = new EventEmitter<Date>();
 
-  readonly weekdayLabels = WEEKDAY_LABELS;
   readonly maxVisible = MAX_VISIBLE_EVENTS;
   weeks: MonthWeek[] = [];
+  weekdayLabels: string[] = [];
+  private resolvedLocale = resolveLocale(null);
 
   ngOnChanges(): void {
+    this.resolvedLocale = resolveLocale(this.locale);
+    this.weekdayLabels = this.buildWeekdayLabels();
     this.weeks = this.buildWeeks();
+  }
+
+  private buildWeekdayLabels(): string[] {
+    const names = this.resolvedLocale.weekdayNamesShort;
+    return Array.from({ length: 7 }, (_, i) => names[(i + this.weekStartsOn) % 7]);
+  }
+
+  formatEventTime(date: Date): string {
+    return formatTime(date, this.resolvedLocale.timeFormat);
   }
 
   private buildWeeks(): MonthWeek[] {
